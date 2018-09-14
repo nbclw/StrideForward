@@ -1,5 +1,8 @@
 var WebGL = Laya.WebGL;
 var Handler = Laya.Handler;
+//全局参数
+var bonesConfig = GameGlobal.BONESCONFIG;
+var Background = BackgroundUI.Backgrounds;
 var Bone = BoneModal.Bone;
 var Character = CharacterModal.Character;
 var CharacterCon = CharacterControl.Control;
@@ -10,17 +13,25 @@ var b = false;
 var GameMain = /** @class */ (function () {
     function GameMain() {
         var caster = new Character('caster', 150, 300);
-        caster.CharacterPos(300, 200);
+        caster.CharacterPos(gloablWidth / 2, gloablHeight / 2);
         caster.loadImage('../laya/assets/white.png', 0, 0, caster.width, caster.height);
         Laya.stage.addChild(caster);
         var casterControl = new CharacterCon(caster);
-        Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseHandler, [casterControl]);
+        Laya.stage.on(Laya.Event.RIGHT_MOUSE_DOWN, this, this.rightMouseHandler, [casterControl]);
+        Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseHandler, [casterControl, caster]);
     }
-    GameMain.prototype.mouseHandler = function (casterControl, e) {
+    GameMain.prototype.mouseHandler = function (casterControl, character, e) {
+        if (b) {
+            casterControl.Wlak();
+        }
+    };
+    GameMain.prototype.rightMouseHandler = function (casterControl, e) {
         if (b)
             casterControl.Hide();
-        else
+        else {
             casterControl.Show();
+            casterControl.ResetBones();
+        }
         b = !b;
     };
     return GameMain;

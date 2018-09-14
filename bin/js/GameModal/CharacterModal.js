@@ -95,4 +95,4 @@ var CharacterModal;
     }(Sprite));
     CharacterModal.Character = Character;
 })(CharacterModal || (CharacterModal = {}));
-//# sourceMappingURL=Characters.js.map
+//# sourceMappingURL=CharacterModal.js.map

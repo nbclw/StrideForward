@@ -1,6 +1,10 @@
 import WebGL = Laya.WebGL;
 import Handler = Laya.Handler;
 
+//全局参数
+let bonesConfig = GameGlobal.BONESCONFIG;
+
+import Background = BackgroundUI.Backgrounds;
 import Bone = BoneModal.Bone;
 import Character = CharacterModal.Character;
 import CharacterCon = CharacterControl.Control;
@@ -12,25 +16,31 @@ let b = false;
 class GameMain {
     constructor() {
 
+        
         let caster: Character = new Character('caster', 150, 300);
-        caster.CharacterPos(300, 200);
+        caster.CharacterPos(gloablWidth/2, gloablHeight/2);
         caster.loadImage('../laya/assets/white.png', 0, 0, caster.width, caster.height);
 
         Laya.stage.addChild(caster);
 
         let casterControl: CharacterCon = new CharacterCon(caster);
 
-
-
-        Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseHandler, [casterControl])
-
+        Laya.stage.on(Laya.Event.RIGHT_MOUSE_DOWN, this, this.rightMouseHandler, [casterControl]);
+        Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseHandler, [casterControl, caster]);
     }
 
-    private mouseHandler(casterControl: CharacterCon, e: Event): void {
-        if (b) 
+    private mouseHandler(casterControl: CharacterCon, character: Character, e: Event): void {
+        if (b) {
+            casterControl.Wlak();
+        }
+    }
+    private rightMouseHandler(casterControl: CharacterCon, e: Event): void {
+        if (b)
             casterControl.Hide();
-        else
+        else {
             casterControl.Show();
+            casterControl.ResetBones();
+        }
         b = !b;
     }
 }

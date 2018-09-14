@@ -20,21 +20,21 @@ class GameGlobal {
     public static readonly BONE_LEFTDOWNLEG: string = 'BONELEFTDOWNLEG';
     public static readonly BONE_LEFTFOOT: string = 'BONELEFTFOOT';
     public static readonly BONESCONFIG = {
-        [GameGlobal.BONE_BODY]: { Rotation: 167, Length: 1 },
+        [GameGlobal.BONE_BODY]: { Rotation: 175, Length: 1 },
         [GameGlobal.BONE_HEAD]: { Rotation: 175, Length: 1 },
         [GameGlobal.BONE_NECK]: { Rotation: 198, Length: 0.125 },
-        [GameGlobal.BONE_RIGHTUPARM]: { Rotation: -2, Length: 0.5 },
-        [GameGlobal.BONE_RIGHTDOWNARM]: { Rotation: -20, Length: 0.3 },
-        [GameGlobal.BONE_RIGHTHAND]: { Rotation: -30, Length: 0.5 },
-        [GameGlobal.BONE_LEFTUPARM]: { Rotation: -24, Length: 0.5 },
-        [GameGlobal.BONE_LEFTDOWNARM]: { Rotation: -47, Length: 0.3 },
-        [GameGlobal.BONE_LEFTHAND]: { Rotation: -48, Length: 0.5 },
-        [GameGlobal.BONE_RIGHTUPLEG]: { Rotation: 6, Length: 0.75 },
-        [GameGlobal.BONE_RIGHTDOWNLEG]: { Rotation: 8, Length: 1 },
-        [GameGlobal.BONE_RIGHTFOOT]: { Rotation: -80, Length: 0.5 },
-        [GameGlobal.BONE_LEFTUPLEG]: { Rotation: -17, Length: 0.75 },
-        [GameGlobal.BONE_LEFTDOWNLEG]: { Rotation: 3, Length: 1 },
-        [GameGlobal.BONE_LEFTFOOT]: { Rotation: -80, Length: 0.5 }
+        [GameGlobal.BONE_RIGHTUPARM]: { Rotation: -90, Length: 0.5 },
+        [GameGlobal.BONE_RIGHTDOWNARM]: { Rotation: -90, Length: 0.3 },
+        [GameGlobal.BONE_RIGHTHAND]: { Rotation: -90, Length: 0.5 },
+        [GameGlobal.BONE_LEFTUPARM]: { Rotation: -90, Length: 0.5 },
+        [GameGlobal.BONE_LEFTDOWNARM]: { Rotation: -90, Length: 0.3 },
+        [GameGlobal.BONE_LEFTHAND]: { Rotation: -90, Length: 0.5 },
+        [GameGlobal.BONE_RIGHTUPLEG]: { Rotation: -6, Length: 0.75 },
+        [GameGlobal.BONE_RIGHTDOWNLEG]: { Rotation: 6, Length: 1 },
+        [GameGlobal.BONE_RIGHTFOOT]: { Rotation: -90, Length: 0.3 },
+        [GameGlobal.BONE_LEFTUPLEG]: { Rotation: -6, Length: 0.75 },
+        [GameGlobal.BONE_LEFTDOWNLEG]: { Rotation: 6, Length: 1 },
+        [GameGlobal.BONE_LEFTFOOT]: { Rotation: -90, Length: 0.3 }
     }
 
 }
