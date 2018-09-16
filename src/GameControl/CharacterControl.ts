@@ -13,8 +13,9 @@ module CharacterControl {
 
 		private character: Character;//控制的角色
 		private isReady: boolean = false;//角色是否准备好
-		private isAction: boolean = false;
+		private isAction: boolean = false;//角色是否在运动
 		private bodyBone: Bone;
+		private walkLeg: WalkLegEnum = WalkLegEnum.LEFT;//角色运动的腿，默认左腿
 
 		//显示
 		public Show(): void {
@@ -66,68 +67,108 @@ module CharacterControl {
 
 
 
-		public Wlak(): void {
+		public Wlak(distance: number): void {
 			if (!this.isReady) return;
-			// if (this.isAction) return;
+			if (this.isAction) return;
 
 			if (this.bodyBone == null) this.bodyBone = this.character.getChildByName(GameGlobal.BONE_BODY) as Bone;
 			this.isAction = true;
 			let index: number = 0;
-			var distance = this.character.boneLength;
-			var offset = this.character.boneLength / 10;
-			var frames = [
-				{
-					[GameGlobal.BONE_RIGHTUPLEG]: 0,
-					[GameGlobal.BONE_RIGHTDOWNLEG]: 12,
-					[GameGlobal.BONE_RIGHTFOOT]: -90,
-					[GameGlobal.BONE_LEFTUPLEG]: -45,
-					[GameGlobal.BONE_LEFTDOWNLEG]: 45,
-					[GameGlobal.BONE_LEFTFOOT]: -45,
-				},
-				{
-					[GameGlobal.BONE_RIGHTUPLEG]: 8,
-					[GameGlobal.BONE_RIGHTDOWNLEG]: 20,
-					[GameGlobal.BONE_RIGHTFOOT]: -70,
-					[GameGlobal.BONE_LEFTUPLEG]: -45,
-					[GameGlobal.BONE_LEFTDOWNLEG]: 0,
-					[GameGlobal.BONE_LEFTFOOT]: -80,
-				},
-				{
-					[GameGlobal.BONE_RIGHTUPLEG]: 20,
-					[GameGlobal.BONE_RIGHTDOWNLEG]: 45,
-					[GameGlobal.BONE_RIGHTFOOT]: -60,
-					[GameGlobal.BONE_LEFTUPLEG]: -40,
-					[GameGlobal.BONE_LEFTDOWNLEG]: -15,
-					[GameGlobal.BONE_LEFTFOOT]: -115,
-				}
-			]
+			var offset = this.character.legsInter / 2;
 
-			Laya.timer.loop(1000, this, function () {
-				this.Walk1(frames[index], offset);
+			distance = this.walkLeg == WalkLegEnum.LEFT ? distance : -distance;
+
+			var frames = this.MathRotation(distance);
+
+			Laya.timer.loop(100, this, function () {
+				this.Walk1(frames[index], offset, index == (frames.length - 1));
 				index++;
-				if (index >= frames.length)
+				if (index >= frames.length) {
 					Laya.timer.clearAll(this);
+					if (this.walkLeg == WalkLegEnum.LEFT)
+						this.walkLeg = WalkLegEnum.RIGHT;
+					else
+						this.walkLeg = WalkLegEnum.LEFT;
+					this.isAction = false;
+				}
 			});
 		}
-		private Walk1(frame, offset): void {
+		private MathRotation(distance: number): any {
+			var frames = [];
+			var stageDis = distance / 2;
+			var frameLength = 16;
+			var rotation = Math.asin(stageDis / this.character.legLength) * 360 / 2 / Math.PI;
+			var changeRotation = rotation - this.character.legsRotation;
+			this.character.legsRotation = rotation;
+
+			var frameUp, frameDown;
+			if (this.walkLeg == WalkLegEnum.LEFT) {
+				frameUp = {
+					[GameGlobal.BONE_RIGHTUPLEG]: changeRotation / 16,
+					[GameGlobal.BONE_RIGHTDOWNLEG]: changeRotation / 16,
+					[GameGlobal.BONE_RIGHTFOOT]: 0,
+					[GameGlobal.BONE_LEFTUPLEG]: -changeRotation / 4,
+					[GameGlobal.BONE_LEFTDOWNLEG]: changeRotation / 16,
+					[GameGlobal.BONE_LEFTFOOT]: changeRotation / 16,
+				}
+				frameDown = {
+					[GameGlobal.BONE_RIGHTUPLEG]: changeRotation / 16,
+					[GameGlobal.BONE_RIGHTDOWNLEG]: changeRotation / 16,
+					[GameGlobal.BONE_RIGHTFOOT]: 0,
+					[GameGlobal.BONE_LEFTUPLEG]: changeRotation / 8,
+					[GameGlobal.BONE_LEFTDOWNLEG]: -changeRotation * 3 / 16,
+					[GameGlobal.BONE_LEFTFOOT]: -changeRotation / 16,
+				}
+			} else {
+				frameUp = {
+					[GameGlobal.BONE_RIGHTUPLEG]: changeRotation / 4,
+					[GameGlobal.BONE_RIGHTDOWNLEG]: -changeRotation / 16,
+					[GameGlobal.BONE_RIGHTFOOT]: -changeRotation / 16,
+					[GameGlobal.BONE_LEFTUPLEG]: -changeRotation / 16,
+					[GameGlobal.BONE_LEFTDOWNLEG]: -changeRotation / 16,
+					[GameGlobal.BONE_LEFTFOOT]: 0,
+				}
+				frameDown = {
+					[GameGlobal.BONE_RIGHTUPLEG]: -changeRotation / 8,
+					[GameGlobal.BONE_RIGHTDOWNLEG]: changeRotation * 3 / 16,
+					[GameGlobal.BONE_RIGHTFOOT]: changeRotation / 16,
+					[GameGlobal.BONE_LEFTUPLEG]: -changeRotation / 16,
+					[GameGlobal.BONE_LEFTDOWNLEG]: -changeRotation / 16,
+					[GameGlobal.BONE_LEFTFOOT]: 0,
+				}
+			}
+			//一阶段，上升
+			for (var index = 0; index < frameLength / 2; index++) {
+				frames.push(frameUp);
+			}
+			//二阶段，落下
+			for (var index = 0; index < frameLength / 2; index++) {
+				frames.push(frameDown);
+			}
+
+			return frames;
+		}
+		private Walk1(frame, offset, isLast): void {
 			let lastBone: Bone, currBone: Bone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_RIGHTUPLEG) as Bone;
-			currBone.BonePosAndRotation(this.bodyBone.beginPoint.x - offset, this.bodyBone.beginPoint.y + offset, frame[GameGlobal.BONE_RIGHTUPLEG]);
+			currBone.BonePosAndRotation(this.bodyBone.beginPoint.x - offset, this.bodyBone.beginPoint.y, currBone.rotation + frame[GameGlobal.BONE_RIGHTUPLEG]);
 			lastBone = currBone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_RIGHTDOWNLEG) as Bone;
-			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, frame[GameGlobal.BONE_RIGHTDOWNLEG]);
+			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, currBone.rotation + frame[GameGlobal.BONE_RIGHTDOWNLEG]);
+			var bx = currBone.endPoint.x;
 			lastBone = currBone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_RIGHTFOOT) as Bone;
-			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, frame[GameGlobal.BONE_RIGHTFOOT]);
+			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, currBone.rotation + frame[GameGlobal.BONE_RIGHTFOOT]);
 
 			currBone = this.character.getChildByName(GameGlobal.BONE_LEFTUPLEG) as Bone;
-			currBone.BonePosAndRotation(this.bodyBone.beginPoint.x + offset, this.bodyBone.beginPoint.y + offset, frame[GameGlobal.BONE_LEFTUPLEG]);
+			currBone.BonePosAndRotation(this.bodyBone.beginPoint.x + offset, this.bodyBone.beginPoint.y, currBone.rotation + frame[GameGlobal.BONE_LEFTUPLEG]);
 			lastBone = currBone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_LEFTDOWNLEG) as Bone;
-			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, frame[GameGlobal.BONE_LEFTDOWNLEG]);
+			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, currBone.rotation + frame[GameGlobal.BONE_LEFTDOWNLEG]);
+			var ex = currBone.endPoint.x;
 			lastBone = currBone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_LEFTFOOT) as Bone;
-			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, frame[GameGlobal.BONE_LEFTFOOT]);
+			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, currBone.rotation + frame[GameGlobal.BONE_LEFTFOOT]);
 		}
 
 
@@ -147,7 +188,7 @@ module CharacterControl {
 
 
 			currBone = this.character.getChildByName(GameGlobal.BONE_RIGHTUPARM) as Bone;
-			currBone.BonePosAndRotation(this.bodyBone.endPoint.x - this.character.boneLength / 8, this.bodyBone.endPoint.y + this.character.boneLength / 5, bonesConfig[GameGlobal.BONE_RIGHTUPARM].Rotation);
+			currBone.BonePosAndRotation(this.bodyBone.endPoint.x - this.character.boneLength / 8, this.bodyBone.endPoint.y, bonesConfig[GameGlobal.BONE_RIGHTUPARM].Rotation);
 			lastBone = currBone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_RIGHTDOWNARM) as Bone;
 			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, bonesConfig[GameGlobal.BONE_RIGHTDOWNARM].Rotation);
@@ -156,7 +197,7 @@ module CharacterControl {
 			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, bonesConfig[GameGlobal.BONE_RIGHTHAND].Rotation);
 
 			currBone = this.character.getChildByName(GameGlobal.BONE_LEFTUPARM) as Bone;
-			currBone.BonePosAndRotation(this.bodyBone.endPoint.x + this.character.boneLength / 8, this.bodyBone.endPoint.y + this.character.boneLength / 10, bonesConfig[GameGlobal.BONE_LEFTUPARM].Rotation);
+			currBone.BonePosAndRotation(this.bodyBone.endPoint.x + this.character.boneLength / 8, this.bodyBone.endPoint.y, bonesConfig[GameGlobal.BONE_LEFTUPARM].Rotation);
 			lastBone = currBone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_LEFTDOWNARM) as Bone;
 			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, bonesConfig[GameGlobal.BONE_LEFTDOWNARM].Rotation);
@@ -166,22 +207,25 @@ module CharacterControl {
 
 
 			currBone = this.character.getChildByName(GameGlobal.BONE_RIGHTUPLEG) as Bone;
-			currBone.BonePosAndRotation(this.bodyBone.beginPoint.x - this.character.boneLength / 10, this.bodyBone.beginPoint.y + this.character.boneLength / 10, bonesConfig[GameGlobal.BONE_RIGHTUPLEG].Rotation);
+			currBone.BonePosAndRotation(this.bodyBone.beginPoint.x - this.character.legsInter / 2, this.bodyBone.beginPoint.y, bonesConfig[GameGlobal.BONE_RIGHTUPLEG].Rotation + this.character.upLegRotationOffset);
 			lastBone = currBone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_RIGHTDOWNLEG) as Bone;
-			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, bonesConfig[GameGlobal.BONE_RIGHTDOWNLEG].Rotation);
+			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, bonesConfig[GameGlobal.BONE_RIGHTDOWNLEG].Rotation + this.character.downLegRotationOffset);
 			lastBone = currBone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_RIGHTFOOT) as Bone;
 			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, bonesConfig[GameGlobal.BONE_RIGHTFOOT].Rotation);
 
 			currBone = this.character.getChildByName(GameGlobal.BONE_LEFTUPLEG) as Bone;
-			currBone.BonePosAndRotation(this.bodyBone.beginPoint.x + this.character.boneLength / 10, this.bodyBone.beginPoint.y + this.character.boneLength / 10, bonesConfig[GameGlobal.BONE_LEFTUPLEG].Rotation);
+			currBone.BonePosAndRotation(this.bodyBone.beginPoint.x + this.character.legsInter / 2, this.bodyBone.beginPoint.y, bonesConfig[GameGlobal.BONE_LEFTUPLEG].Rotation + this.character.upLegRotationOffset);
 			lastBone = currBone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_LEFTDOWNLEG) as Bone;
-			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, bonesConfig[GameGlobal.BONE_LEFTDOWNLEG].Rotation);
+			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, bonesConfig[GameGlobal.BONE_LEFTDOWNLEG].Rotation + this.character.downLegRotationOffset);
 			lastBone = currBone;
 			currBone = this.character.getChildByName(GameGlobal.BONE_LEFTFOOT) as Bone;
 			currBone.BonePosAndRotation(lastBone.endPoint.x, lastBone.endPoint.y, bonesConfig[GameGlobal.BONE_LEFTFOOT].Rotation);
+
+
+			this.character.legsRotation = 0;
 		}
 	}
 }

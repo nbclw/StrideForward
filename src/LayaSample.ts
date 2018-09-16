@@ -31,7 +31,7 @@ class GameMain {
 
     private mouseHandler(casterControl: CharacterCon, character: Character, e: Event): void {
         if (b) {
-            casterControl.Wlak();
+            casterControl.Wlak(200);
         }
     }
     private rightMouseHandler(casterControl: CharacterCon, e: Event): void {

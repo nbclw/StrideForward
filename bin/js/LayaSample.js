@@ -22,7 +22,7 @@ var GameMain = /** @class */ (function () {
     }
     GameMain.prototype.mouseHandler = function (casterControl, character, e) {
         if (b) {
-            casterControl.Wlak();
+            casterControl.Wlak(200);
         }
     };
     GameMain.prototype.rightMouseHandler = function (casterControl, e) {
