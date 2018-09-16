@@ -5,16 +5,22 @@ module BoneModal {
 	import Sprite = Laya.Sprite;
 	import Point = Laya.Point;
 	export class Bone extends Sprite {
-		constructor(name: string, length: number, width?: number, skin?: string) {
+		constructor(name: string, length: number, minRotation?: number, maxRotation?: number, width?: number, skin?: string) {
 			super();
 			this.name = name;
 			this.boneLength = length;
+			this.minRotation = minRotation != undefined ? minRotation : 0;
+			this.maxRotation = maxRotation != undefined ? maxRotation : 0;
 			this.boneWidth = width != undefined ? width : 5;
 			if (skin != undefined)
 				this.skin = skin;
 			else
 				this.skin = '../laya/assets/defeaultSkin.png';
 		}
+		private minRotation: number;
+		private maxRotation: number;
+		public boneRotation: number;
+
 		public boneWidth: number;
 		public boneLength: number;
 		public skin: string;
@@ -28,20 +34,24 @@ module BoneModal {
 		//设置sprite和起点位置
 		private SetPos(x: number, y: number): void {
 			this.pos(x, y);
-			if (this.beginPoint == null)
+			if (this.beginPoint == null || this.beginPoint == undefined)
 				this.beginPoint = new Point();
 			this.beginPoint.setTo(x, y);
 		}
 		//设置sprite轴心点、旋转角度和终点位置
 		private SetRotation(rotation: number): void {
+			this.boneRotation = rotation;
+			if (this.minRotation != 0 && rotation < this.minRotation) return;
+			if (this.maxRotation != 0 && rotation > this.maxRotation) return;
+
 			this.rotation = rotation;
-			this.SetEndPoint(rotation);
+			this.SetEndPoint();
 		}
 		//根据起点，和长度设置终点位置
-		private SetEndPoint(rotation: number): void {
-			if (this.beginPoint == null) return;
+		private SetEndPoint(): void {
+			if (this.beginPoint == null || this.beginPoint == undefined) return;
 
-			if (this.endPoint == null)
+			if (this.endPoint == null || this.endPoint == undefined)
 				this.endPoint = new Point();
 			let rad: number = this.rotation * GameGlobal.RAD_VALUE;
 			if (this.rotation % 90 == 0) {

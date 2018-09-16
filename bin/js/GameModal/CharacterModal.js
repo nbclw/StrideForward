@@ -35,9 +35,9 @@ var CharacterModal;
             this.legLength = 0;
             this.characterBones = [];
             this.boneLength = this.height / 4; //设置骨骼默认长度
-            this.legsInter = this.boneLength / 5;
-            this.legsRotation = 0;
-            if (this.centerPoint == null)
+            this.legsInter = this.boneLength / 5; //两腿间的距离
+            this.legsRotation = 0; //两腿的夹角
+            if (this.centerPoint == null || this.centerPoint == undefined)
                 this.centerPoint = new Point();
             this.centerPoint.setTo(this.width / 2, this.height / 2 + this.boneLength / 10);
             //创建人物骨骼
@@ -46,6 +46,14 @@ var CharacterModal;
         //定位角色
         Character.prototype.CharacterPos = function (x, y) {
             this.pos(x - this.width / 2, y - this.height / 2);
+        };
+        //获取左脚与右脚的横向距离差
+        Character.prototype.GetDistanceByLtoR = function () {
+            return this.leftFoot.endPoint.x - this.rightFoot.endPoint.x - this.legsInter;
+        };
+        //获取右脚与左脚的横向距离差
+        Character.prototype.GetDistanceByRtoL = function () {
+            return this.rightFoot.endPoint.x - this.leftFoot.endPoint.x - this.legsInter;
         };
         Character.prototype.CreateBones = function () {
             if (this.characterBones.length > 0)
@@ -77,24 +85,28 @@ var CharacterModal;
             var leftHand = new Bone(GameGlobal.BONE_LEFTHAND, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTHAND].Length);
             leftHand.BonePosAndRotation(leftDownArm.endPoint.x, leftDownArm.endPoint.y, bonesConfig[GameGlobal.BONE_LEFTHAND].Rotation);
             this.characterBones.push(leftHand);
-            var rightUpLeg = new Bone(GameGlobal.BONE_RIGHTUPLEG, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTUPLEG].Length);
+            var rightUpLeg = new Bone(GameGlobal.BONE_RIGHTUPLEG, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTUPLEG].Length, -84);
             rightUpLeg.BonePosAndRotation(bodyBone.beginPoint.x - this.legsInter / 2, bodyBone.beginPoint.y, bonesConfig[GameGlobal.BONE_RIGHTUPLEG].Rotation + this.upLegRotationOffset);
             this.characterBones.push(rightUpLeg);
             var rightDownLeg = new Bone(GameGlobal.BONE_RIGHTDOWNLEG, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTDOWNLEG].Length);
             rightDownLeg.BonePosAndRotation(rightUpLeg.endPoint.x, rightUpLeg.endPoint.y, bonesConfig[GameGlobal.BONE_RIGHTDOWNLEG].Rotation + this.downLegRotationOffset);
             this.characterBones.push(rightDownLeg);
-            var rightFoot = new Bone(GameGlobal.BONE_RIGHTFOOT, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTFOOT].Length);
-            rightFoot.BonePosAndRotation(rightDownLeg.endPoint.x, rightDownLeg.endPoint.y, bonesConfig[GameGlobal.BONE_RIGHTFOOT].Rotation);
-            this.characterBones.push(rightFoot);
-            var leftUpLeg = new Bone(GameGlobal.BONE_LEFTUPLEG, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTUPLEG].Length);
+            if (this.rightFoot == null || this.rightFoot == undefined) {
+                this.rightFoot = new Bone(GameGlobal.BONE_RIGHTFOOT, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTFOOT].Length);
+                this.characterBones.push(this.rightFoot);
+            }
+            this.rightFoot.BonePosAndRotation(rightDownLeg.endPoint.x, rightDownLeg.endPoint.y, bonesConfig[GameGlobal.BONE_RIGHTFOOT].Rotation);
+            var leftUpLeg = new Bone(GameGlobal.BONE_LEFTUPLEG, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTUPLEG].Length, -84);
             leftUpLeg.BonePosAndRotation(bodyBone.beginPoint.x + this.legsInter / 2, bodyBone.beginPoint.y, bonesConfig[GameGlobal.BONE_LEFTUPLEG].Rotation + this.upLegRotationOffset);
             this.characterBones.push(leftUpLeg);
             var leftDownLeg = new Bone(GameGlobal.BONE_LEFTDOWNLEG, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTDOWNLEG].Length);
             leftDownLeg.BonePosAndRotation(leftUpLeg.endPoint.x, leftUpLeg.endPoint.y, bonesConfig[GameGlobal.BONE_LEFTDOWNLEG].Rotation + this.downLegRotationOffset);
             this.characterBones.push(leftDownLeg);
-            var leftFoot = new Bone(GameGlobal.BONE_LEFTFOOT, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTFOOT].Length);
-            leftFoot.BonePosAndRotation(leftDownLeg.endPoint.x, leftDownLeg.endPoint.y, bonesConfig[GameGlobal.BONE_LEFTFOOT].Rotation);
-            this.characterBones.push(leftFoot);
+            if (this.leftFoot == null || this.leftFoot == undefined) {
+                this.leftFoot = new Bone(GameGlobal.BONE_LEFTFOOT, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTFOOT].Length);
+                this.characterBones.push(this.leftFoot);
+            }
+            this.leftFoot.BonePosAndRotation(leftDownLeg.endPoint.x, leftDownLeg.endPoint.y, bonesConfig[GameGlobal.BONE_LEFTFOOT].Rotation);
             this.legLength = leftDownLeg.endPoint.y - leftUpLeg.beginPoint.y;
         };
         return Character;
