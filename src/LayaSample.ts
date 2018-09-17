@@ -16,22 +16,27 @@ let b = false;
 class GameMain {
     constructor() {
 
-        
+
         let caster: Character = new Character('caster', 150, 300);
-        caster.CharacterPos(gloablWidth/2, gloablHeight/2);
+        caster.CharacterPos(gloablWidth / 2, gloablHeight / 2);
         caster.loadImage('../laya/assets/white.png', 0, 0, caster.width, caster.height);
 
         Laya.stage.addChild(caster);
 
         let casterControl: CharacterCon = new CharacterCon(caster);
 
+        let bg = new Background();
+        Laya.stage.addChild(bg);
+        console.log(bg.btnWalk20)
+
+        bg.btnWalk20.clickHandler.setTo(this, this.rightMouseHandler, [casterControl], false);
+
         Laya.stage.on(Laya.Event.RIGHT_MOUSE_DOWN, this, this.rightMouseHandler, [casterControl]);
-        Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseHandler, [casterControl, caster]);
     }
 
-    private mouseHandler(casterControl: CharacterCon, character: Character, e: Event): void {
+    private mouseHandler(casterControl: CharacterCon, e: Event): void {
         if (b) {
-            casterControl.Wlak(200);
+            casterControl.Wlak(90);
         }
     }
     private rightMouseHandler(casterControl: CharacterCon, e: Event): void {
@@ -50,7 +55,7 @@ Laya.MiniAdpter.init();
 //程序入口
 Laya.init(gloablWidth, gloablHeight, WebGL);
 //开启统计信息
-Laya.Stat.show();
+Laya.Stat.show(0, 200);
 
 new GameMain();
 //'portrait'

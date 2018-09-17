@@ -26,7 +26,7 @@ var BoneModal;
             _this.boneLength = length;
             _this.minRotation = minRotation != undefined ? minRotation : 0;
             _this.maxRotation = maxRotation != undefined ? maxRotation : 0;
-            _this.boneWidth = width != undefined ? width : 5;
+            _this.boneWidth = width != undefined ? width : 4;
             if (skin != undefined)
                 _this.skin = skin;
             else
@@ -47,11 +47,12 @@ var BoneModal;
         //设置sprite轴心点、旋转角度和终点位置
         Bone.prototype.SetRotation = function (rotation) {
             this.boneRotation = rotation;
+            var b = true;
             if (this.minRotation != 0 && rotation < this.minRotation)
-                return;
+                b = false;
             if (this.maxRotation != 0 && rotation > this.maxRotation)
-                return;
-            this.rotation = rotation;
+                b = false;
+            this.rotation = b ? rotation : this.rotation;
             this.SetEndPoint();
         };
         //根据起点，和长度设置终点位置

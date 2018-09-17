@@ -11,7 +11,7 @@ module BoneModal {
 			this.boneLength = length;
 			this.minRotation = minRotation != undefined ? minRotation : 0;
 			this.maxRotation = maxRotation != undefined ? maxRotation : 0;
-			this.boneWidth = width != undefined ? width : 5;
+			this.boneWidth = width != undefined ? width : 4;
 			if (skin != undefined)
 				this.skin = skin;
 			else
@@ -41,10 +41,11 @@ module BoneModal {
 		//设置sprite轴心点、旋转角度和终点位置
 		private SetRotation(rotation: number): void {
 			this.boneRotation = rotation;
-			if (this.minRotation != 0 && rotation < this.minRotation) return;
-			if (this.maxRotation != 0 && rotation > this.maxRotation) return;
+			var b = true;
+			if (this.minRotation != 0 && rotation < this.minRotation) b = false;
+			if (this.maxRotation != 0 && rotation > this.maxRotation) b = false;
+			this.rotation = b ? rotation: this.rotation;
 
-			this.rotation = rotation;
 			this.SetEndPoint();
 		}
 		//根据起点，和长度设置终点位置
