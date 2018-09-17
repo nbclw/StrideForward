@@ -20,7 +20,7 @@ class GameGlobal {
     public static readonly BONE_LEFTDOWNLEG: string = 'BONELEFTDOWNLEG';
     public static readonly BONE_LEFTFOOT: string = 'BONELEFTFOOT';
     public static readonly BONESCONFIG = {
-        [GameGlobal.BONE_BODY]: { Rotation: 175, Length: 1 },
+        [GameGlobal.BONE_BODY]: { Rotation: 180, Length: 1 },
         [GameGlobal.BONE_HEAD]: { Rotation: 175, Length: 1 },
         [GameGlobal.BONE_NECK]: { Rotation: 198, Length: 0.125 },
         [GameGlobal.BONE_RIGHTUPARM]: { Rotation: 0, Length: 0.5 },

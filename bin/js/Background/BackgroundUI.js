@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 /**
-* name
+* UI
 */
 var BackgroundUI;
 (function (BackgroundUI) {
@@ -26,7 +26,6 @@ var BackgroundUI;
             _this.btnWalk20.pos(0, 0);
             _this.btnWalk20.label = '20';
             _this.btnWalk20.loadImage('../laya/assets/white.png');
-            _this.btnWalk20.clickHandler.setTo(_this.btnWalk20, _this.asdsdas, [10], false);
             _this.addChild(_this.btnWalk20);
             _this.btnWalk30 = new Button();
             _this.btnWalk30.pos(60, 0);

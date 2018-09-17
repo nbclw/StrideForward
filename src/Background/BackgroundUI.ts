@@ -1,5 +1,5 @@
 /**
-* name 
+* UI 
 */
 module BackgroundUI {
 	import View = Laya.View;
@@ -29,5 +29,10 @@ module BackgroundUI {
 		public btnWalk20: Button;
 		public btnWalk30: Button;
 		public btnWalk50: Button;
+
+		private asdsdas(a):void{
+
+			console.log(a)
+		}
 	}
 }

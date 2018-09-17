@@ -22,7 +22,7 @@ var GameGlobal = /** @class */ (function () {
     GameGlobal.BONE_LEFTDOWNLEG = 'BONELEFTDOWNLEG';
     GameGlobal.BONE_LEFTFOOT = 'BONELEFTFOOT';
     GameGlobal.BONESCONFIG = (_a = {},
-        _a[GameGlobal.BONE_BODY] = { Rotation: 175, Length: 1 },
+        _a[GameGlobal.BONE_BODY] = { Rotation: 180, Length: 1 },
         _a[GameGlobal.BONE_HEAD] = { Rotation: 175, Length: 1 },
         _a[GameGlobal.BONE_NECK] = { Rotation: 198, Length: 0.125 },
         _a[GameGlobal.BONE_RIGHTUPARM] = { Rotation: 0, Length: 0.5 },

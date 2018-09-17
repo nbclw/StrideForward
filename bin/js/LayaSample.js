@@ -6,36 +6,24 @@ var Background = BackgroundUI.Backgrounds;
 var Bone = BoneModal.Bone;
 var Character = CharacterModal.Character;
 var CharacterCon = CharacterControl.Control;
+var GameCon = GameControl.Control;
 var gloablWidth = 600;
 var gloablHeight = 400;
-var b = false;
+var skins = ['../laya/assets/white.png', '../laya/assets/defeaultSkin.png'];
 // 程序入口
 var GameMain = /** @class */ (function () {
     function GameMain() {
+        Laya.loader.load(skins, Handler.create(this, this.GameInit));
+    }
+    GameMain.prototype.GameInit = function () {
         var caster = new Character('caster', 150, 300);
         caster.CharacterPos(gloablWidth / 2, gloablHeight / 2);
-        caster.loadImage('../laya/assets/white.png', 0, 0, caster.width, caster.height);
-        Laya.stage.addChild(caster);
+        caster.loadImage(skins[0], 0, 0, caster.width, caster.height);
         var casterControl = new CharacterCon(caster);
         var bg = new Background();
-        Laya.stage.addChild(bg);
-        console.log(bg.btnWalk20);
-        bg.btnWalk20.clickHandler.setTo(this, this.rightMouseHandler, [casterControl], false);
-        Laya.stage.on(Laya.Event.RIGHT_MOUSE_DOWN, this, this.rightMouseHandler, [casterControl]);
-    }
-    GameMain.prototype.mouseHandler = function (casterControl, e) {
-        if (b) {
-            casterControl.Wlak(90);
-        }
-    };
-    GameMain.prototype.rightMouseHandler = function (casterControl, e) {
-        if (b)
-            casterControl.Hide();
-        else {
-            casterControl.Show();
-            casterControl.ResetBones();
-        }
-        b = !b;
+        var gameControl = new GameCon(caster, casterControl, bg);
+        gameControl.StageInit();
+        gameControl.StageEventInit();
     };
     return GameMain;
 }());

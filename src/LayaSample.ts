@@ -8,45 +8,29 @@ import Background = BackgroundUI.Backgrounds;
 import Bone = BoneModal.Bone;
 import Character = CharacterModal.Character;
 import CharacterCon = CharacterControl.Control;
+import GameCon = GameControl.Control;
 
 let gloablWidth = 600;
 let gloablHeight = 400;
-let b = false;
+let skins: string[] = ['../laya/assets/white.png', '../laya/assets/defeaultSkin.png'];
+
 // 程序入口
 class GameMain {
     constructor() {
-
-
+        Laya.loader.load(skins, Handler.create(this, this.GameInit));
+    }
+    private GameInit(): void {
         let caster: Character = new Character('caster', 150, 300);
         caster.CharacterPos(gloablWidth / 2, gloablHeight / 2);
-        caster.loadImage('../laya/assets/white.png', 0, 0, caster.width, caster.height);
-
-        Laya.stage.addChild(caster);
+        caster.loadImage(skins[0], 0, 0, caster.width, caster.height);
 
         let casterControl: CharacterCon = new CharacterCon(caster);
 
-        let bg = new Background();
-        Laya.stage.addChild(bg);
-        console.log(bg.btnWalk20)
+        let bg: Background = new Background();
 
-        bg.btnWalk20.clickHandler.setTo(this, this.rightMouseHandler, [casterControl], false);
-
-        Laya.stage.on(Laya.Event.RIGHT_MOUSE_DOWN, this, this.rightMouseHandler, [casterControl]);
-    }
-
-    private mouseHandler(casterControl: CharacterCon, e: Event): void {
-        if (b) {
-            casterControl.Wlak(90);
-        }
-    }
-    private rightMouseHandler(casterControl: CharacterCon, e: Event): void {
-        if (b)
-            casterControl.Hide();
-        else {
-            casterControl.Show();
-            casterControl.ResetBones();
-        }
-        b = !b;
+        let gameControl: GameCon = new GameCon(caster, casterControl, bg);
+        gameControl.StageInit();
+        gameControl.StageEventInit();
     }
 }
 
