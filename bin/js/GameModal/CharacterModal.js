@@ -109,6 +109,7 @@ var CharacterModal;
             this.SetBonesRotation(bonesRotation);
             this.legHeight = this.leftDownLegBone.endPoint.y - this.leftUpLegBone.beginPoint.y;
             this.legLength = Math.sqrt(Math.pow(this.leftUpLegBone.beginPoint.x - this.leftDownLegBone.endPoint.x, 2) + Math.pow(this.leftUpLegBone.beginPoint.y - this.leftDownLegBone.endPoint.y, 2));
+            this.walkMaxDistance = this.legLength * 8 / 5;
             if (this.legHeight == 0)
                 this.legRotation = (this.leftUpLegBone.endPoint.x - this.leftUpLegBone.beginPoint.x) > 0 ? -90 : 90;
             else

@@ -19,7 +19,7 @@ module CharacterControl {
 
 		private ResetConfig(): void {
 			this.frameLength = 16;
-			this.actionTime = 500;
+			this.actionTime = 400;
 			this.walkLeg = WalkLegEnum.LEFT;
 		}
 
@@ -53,18 +53,25 @@ module CharacterControl {
 		}
 
 		//行走
-		public Wlak(distance: number): void {
+		public Wlak(pre: number): void {
 			if (!this.isReady) return;
 			if (this.isAction) return;
+			var distance = pre * this.character.walkMaxDistance;
+			if (distance == 0) return;
 
 			this.isAction = true;
-			let index: number = 0;
+			var index = 0;
 			var offset = this.character.legsInter / 2;
-
 			distance = this.walkLeg == WalkLegEnum.LEFT ? distance : -distance;
 			distance += this.character.GetDistanceByLtoR();
 
 			var frames = this.MathRotation(distance);
+			if (frames.length == 0) {
+				this.isAction = false;
+				return;
+			}
+
+			var tweenValue = frames[0][GameGlobal.BONE_BODY];
 
 			Laya.timer.loop(this.actionTime / this.frameLength, this, function () {
 				this.SetBones(frames[index], offset, index == (frames.length - 1));
@@ -158,8 +165,9 @@ module CharacterControl {
 			var changeRotation = rotation - this.character.legsRotation;
 			this.character.legsRotation = rotation;
 
-			var frameUp, frameDown;
+			var frameUp, frameDown, sign;
 			if (this.walkLeg == WalkLegEnum.LEFT) {
+				sign = 1;
 				frameUp = {
 					[GameGlobal.BONE_BODY]: 0,
 					[GameGlobal.BONE_HEAD]: 0,
@@ -195,6 +203,7 @@ module CharacterControl {
 					[GameGlobal.BONE_LEFTFOOT]: -changeRotation / this.frameLength,
 				}
 			} else {
+				sign = -1;
 				frameUp = {
 					[GameGlobal.BONE_BODY]: 0,
 					[GameGlobal.BONE_HEAD]: 0,
@@ -230,13 +239,36 @@ module CharacterControl {
 					[GameGlobal.BONE_LEFTFOOT]: 0,
 				}
 			}
+			var count = this.frameLength / 2;
 			//一阶段，上升
-			for (var index = 0; index < this.frameLength / 2; index++) {
+			for (var index = 0; index < count; index++) {
 				frames.push(frameUp);
+				if (index == 0) {
+					frames[index][GameGlobal.BONE_BODY] = -sign * changeRotation / this.frameLength;
+					frames[index][GameGlobal.BONE_HEAD] = -sign * changeRotation / this.frameLength;
+					frames[index][GameGlobal.BONE_NECK] = -sign * changeRotation / this.frameLength;
+					frames[index][GameGlobal.BONE_RIGHTUPARM] = sign * changeRotation / this.frameLength / 4;
+					frames[index][GameGlobal.BONE_RIGHTDOWNARM] = sign * changeRotation / this.frameLength / 2;
+					frames[index][GameGlobal.BONE_RIGHTHAND] = sign * changeRotation / this.frameLength;
+					frames[index][GameGlobal.BONE_LEFTUPARM] = sign * changeRotation / this.frameLength / 4;
+					frames[index][GameGlobal.BONE_LEFTDOWNARM] = sign * changeRotation / this.frameLength / 2;
+					frames[index][GameGlobal.BONE_LEFTHAND] = sign * changeRotation / this.frameLength;
+				}
 			}
 			//二阶段，落下
-			for (var index = 0; index < this.frameLength / 2; index++) {
+			for (var index = 0; index < count; index++) {
 				frames.push(frameDown);
+				if (index == 0) {
+					frames[count + index][GameGlobal.BONE_BODY] = sign * changeRotation / this.frameLength;
+					frames[count + index][GameGlobal.BONE_HEAD] = sign * changeRotation / this.frameLength;
+					frames[count + index][GameGlobal.BONE_NECK] = sign * changeRotation / this.frameLength;
+					frames[count + index][GameGlobal.BONE_RIGHTUPARM] = -sign * changeRotation / this.frameLength / 4;
+					frames[count + index][GameGlobal.BONE_RIGHTDOWNARM] = -sign * changeRotation / this.frameLength / 2;
+					frames[count + index][GameGlobal.BONE_RIGHTHAND] = -sign * changeRotation / this.frameLength;
+					frames[count + index][GameGlobal.BONE_LEFTUPARM] = -sign * changeRotation / this.frameLength / 4;
+					frames[count + index][GameGlobal.BONE_LEFTDOWNARM] = -sign * changeRotation / this.frameLength / 2;
+					frames[count + index][GameGlobal.BONE_LEFTHAND] = -sign * changeRotation / this.frameLength;
+				}
 			}
 
 			return frames;

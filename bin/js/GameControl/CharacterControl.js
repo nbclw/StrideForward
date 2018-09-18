@@ -13,7 +13,7 @@ var CharacterControl;
         }
         Control.prototype.ResetConfig = function () {
             this.frameLength = 16;
-            this.actionTime = 500;
+            this.actionTime = 400;
             this.walkLeg = WalkLegEnum.LEFT;
         };
         //显示
@@ -43,10 +43,13 @@ var CharacterControl;
                 bones[i].loadImage(bones[i].skin, 0, 0, bones[i].boneWidth, bones[i].boneLength);
         };
         //行走
-        Control.prototype.Wlak = function (distance) {
+        Control.prototype.Wlak = function (pre) {
             if (!this.isReady)
                 return;
             if (this.isAction)
+                return;
+            var distance = pre * this.character.walkMaxDistance;
+            if (distance == 0)
                 return;
             this.isAction = true;
             var index = 0;
@@ -54,6 +57,11 @@ var CharacterControl;
             distance = this.walkLeg == WalkLegEnum.LEFT ? distance : -distance;
             distance += this.character.GetDistanceByLtoR();
             var frames = this.MathRotation(distance);
+            if (frames.length == 0) {
+                this.isAction = false;
+                return;
+            }
+            var tweenValue = frames[0][GameGlobal.BONE_BODY];
             Laya.timer.loop(this.actionTime / this.frameLength, this, function () {
                 this.SetBones(frames[index], offset, index == (frames.length - 1));
                 index++;
@@ -144,8 +152,9 @@ var CharacterControl;
             var rotation = Math.asin(stageDis / this.character.legLength) / GameGlobal.RAD_VALUE;
             var changeRotation = rotation - this.character.legsRotation;
             this.character.legsRotation = rotation;
-            var frameUp, frameDown;
+            var frameUp, frameDown, sign;
             if (this.walkLeg == WalkLegEnum.LEFT) {
+                sign = 1;
                 frameUp = (_a = {},
                     _a[GameGlobal.BONE_BODY] = 0,
                     _a[GameGlobal.BONE_HEAD] = 0,
@@ -182,6 +191,7 @@ var CharacterControl;
                     _b);
             }
             else {
+                sign = -1;
                 frameUp = (_c = {},
                     _c[GameGlobal.BONE_BODY] = 0,
                     _c[GameGlobal.BONE_HEAD] = 0,
@@ -217,13 +227,36 @@ var CharacterControl;
                     _d[GameGlobal.BONE_LEFTFOOT] = 0,
                     _d);
             }
+            var count = this.frameLength / 2;
             //一阶段，上升
-            for (var index = 0; index < this.frameLength / 2; index++) {
+            for (var index = 0; index < count; index++) {
                 frames.push(frameUp);
+                if (index == 0) {
+                    frames[index][GameGlobal.BONE_BODY] = -sign * changeRotation / this.frameLength;
+                    frames[index][GameGlobal.BONE_HEAD] = -sign * changeRotation / this.frameLength;
+                    frames[index][GameGlobal.BONE_NECK] = -sign * changeRotation / this.frameLength;
+                    frames[index][GameGlobal.BONE_RIGHTUPARM] = sign * changeRotation / this.frameLength / 4;
+                    frames[index][GameGlobal.BONE_RIGHTDOWNARM] = sign * changeRotation / this.frameLength / 2;
+                    frames[index][GameGlobal.BONE_RIGHTHAND] = sign * changeRotation / this.frameLength;
+                    frames[index][GameGlobal.BONE_LEFTUPARM] = sign * changeRotation / this.frameLength / 4;
+                    frames[index][GameGlobal.BONE_LEFTDOWNARM] = sign * changeRotation / this.frameLength / 2;
+                    frames[index][GameGlobal.BONE_LEFTHAND] = sign * changeRotation / this.frameLength;
+                }
             }
             //二阶段，落下
-            for (var index = 0; index < this.frameLength / 2; index++) {
+            for (var index = 0; index < count; index++) {
                 frames.push(frameDown);
+                if (index == 0) {
+                    frames[count + index][GameGlobal.BONE_BODY] = sign * changeRotation / this.frameLength;
+                    frames[count + index][GameGlobal.BONE_HEAD] = sign * changeRotation / this.frameLength;
+                    frames[count + index][GameGlobal.BONE_NECK] = sign * changeRotation / this.frameLength;
+                    frames[count + index][GameGlobal.BONE_RIGHTUPARM] = -sign * changeRotation / this.frameLength / 4;
+                    frames[count + index][GameGlobal.BONE_RIGHTDOWNARM] = -sign * changeRotation / this.frameLength / 2;
+                    frames[count + index][GameGlobal.BONE_RIGHTHAND] = -sign * changeRotation / this.frameLength;
+                    frames[count + index][GameGlobal.BONE_LEFTUPARM] = -sign * changeRotation / this.frameLength / 4;
+                    frames[count + index][GameGlobal.BONE_LEFTDOWNARM] = -sign * changeRotation / this.frameLength / 2;
+                    frames[count + index][GameGlobal.BONE_LEFTHAND] = -sign * changeRotation / this.frameLength;
+                }
             }
             return frames;
         };

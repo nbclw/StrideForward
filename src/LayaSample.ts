@@ -12,7 +12,7 @@ import GameCon = GameControl.Control;
 
 let gloablWidth = 600;
 let gloablHeight = 400;
-let skins: string[] = ['../laya/assets/white.png', '../laya/assets/defeaultSkin.png'];
+let skins: string[] = ['../laya/assets/white.png', '../laya/assets/defeaultSkin.png','../laya/assets/gamearea.png'];
 
 // 程序入口
 class GameMain {
@@ -31,6 +31,7 @@ class GameMain {
         let gameControl: GameCon = new GameCon(caster, casterControl, bg);
         gameControl.StageInit();
         gameControl.StageEventInit();
+        gameControl.GameStart();
     }
 }
 

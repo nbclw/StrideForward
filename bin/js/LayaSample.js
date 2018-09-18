@@ -9,7 +9,7 @@ var CharacterCon = CharacterControl.Control;
 var GameCon = GameControl.Control;
 var gloablWidth = 600;
 var gloablHeight = 400;
-var skins = ['../laya/assets/white.png', '../laya/assets/defeaultSkin.png'];
+var skins = ['../laya/assets/white.png', '../laya/assets/defeaultSkin.png', '../laya/assets/gamearea.png'];
 // 程序入口
 var GameMain = /** @class */ (function () {
     function GameMain() {
@@ -24,6 +24,7 @@ var GameMain = /** @class */ (function () {
         var gameControl = new GameCon(caster, casterControl, bg);
         gameControl.StageInit();
         gameControl.StageEventInit();
+        gameControl.GameStart();
     };
     return GameMain;
 }());

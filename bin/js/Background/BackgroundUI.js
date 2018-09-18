@@ -17,11 +17,17 @@ var __extends = (this && this.__extends) || (function () {
 var BackgroundUI;
 (function (BackgroundUI) {
     var View = Laya.View;
+    var Sprite = Laya.Sprite;
     var Button = Laya.Button;
     var Backgrounds = /** @class */ (function (_super) {
         __extends(Backgrounds, _super);
         function Backgrounds() {
             var _this = _super.call(this) || this;
+            _this.gameArea = new Sprite();
+            _this.gameArea.width = gloablWidth;
+            _this.gameArea.height = gloablHeight;
+            _this.gameArea.loadImage('../laya/assets/gamearea.png', 0, 0, _this.gameArea.width, _this.gameArea.height);
+            _this.addChild(_this.gameArea);
             _this.btnWalk20 = new Button();
             _this.btnWalk20.pos(0, 0);
             _this.btnWalk20.label = '20';
@@ -37,11 +43,13 @@ var BackgroundUI;
             _this.btnWalk50.label = '50';
             _this.btnWalk50.loadImage('../laya/assets/white.png');
             _this.addChild(_this.btnWalk50);
+            _this.btnWalk100 = new Button();
+            _this.btnWalk100.pos(180, 0);
+            _this.btnWalk100.label = '100';
+            _this.btnWalk100.loadImage('../laya/assets/white.png');
+            _this.addChild(_this.btnWalk100);
             return _this;
         }
-        Backgrounds.prototype.asdsdas = function (a) {
-            console.log(a);
-        };
         return Backgrounds;
     }(View));
     BackgroundUI.Backgrounds = Backgrounds;
