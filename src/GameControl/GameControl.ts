@@ -28,7 +28,6 @@ module GameControl {
 			Laya.stage.addChild(this.bg);
 
 
-
 			//Laya.stage.addChild(this.character);
 		}
 

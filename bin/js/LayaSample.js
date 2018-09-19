@@ -2,6 +2,7 @@ var WebGL = Laya.WebGL;
 var Handler = Laya.Handler;
 //全局参数
 var bonesConfig = GameGlobal.BONESCONFIG;
+var Progress = LoadProgress.Progress;
 var Background = BackgroundUI.Backgrounds;
 var Bone = BoneModal.Bone;
 var Character = CharacterModal.Character;
@@ -12,8 +13,25 @@ var gloablHeight = 400;
 // 程序入口
 var GameMain = /** @class */ (function () {
     function GameMain() {
-        this.GameInit();
+        Laya.loader.load([GameGlobal.RESOURCES.IMG.PROGRESS, GameGlobal.RESOURCES.IMG.PROGRESS_EMPTY], Handler.create(this, this.Loading));
     }
+    GameMain.prototype.Loading = function () {
+        var progress = new Progress();
+        Laya.stage.addChild(progress);
+        progress.progressBar.changeHandler = new Handler(this, this.progressBar_Changed, [progress]);
+        //clw
+        Laya.timer.loop(1000, this, function () {
+            progress.progressBar.value += 0.2;
+        });
+    };
+    GameMain.prototype.progressBar_Changed = function (progress, value) {
+        if (value >= 1) {
+            Laya.timer.clearAll(this);
+            //Laya.stage.removeChild(progress);
+            progress.alpha = 0.5;
+            //this.GameInit();
+        }
+    };
     GameMain.prototype.GameInit = function () {
         var gameControl = new GameCon();
         gameControl.StageInit();

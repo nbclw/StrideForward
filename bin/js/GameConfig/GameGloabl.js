@@ -40,11 +40,13 @@ var GameGlobal = /** @class */ (function () {
         _a);
     GameGlobal.RESOURCES = {
         IMG: {
+            PROGRESS: '../laya/assets/progress.png',
+            PROGRESS_EMPTY: '../laya/assets/progress$bar.png',
             BONESKIN: '../laya/assets/defeaultSkin.png',
             GAMEAREA: '../laya/assets/gamearea.png',
             WHITE: '../laya/assets/white.png',
-            SHOWAREA: '../laya/assets/showarea.png',
             INITAREA: '../laya/assets/showarea.png',
+            LOADAREA: '../laya/assets/loadarea.png',
         }
     };
     return GameGlobal;

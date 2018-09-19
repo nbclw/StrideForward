@@ -9,6 +9,7 @@ enum WalkLegEnum {
 
 //背景的状态
 enum BackgroundStatus {
+	LOADING,
 	INIT,
 	GAMING,
 	PAUSE

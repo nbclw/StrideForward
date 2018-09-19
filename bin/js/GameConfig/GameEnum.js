@@ -10,8 +10,9 @@ var WalkLegEnum;
 //背景的状态
 var BackgroundStatus;
 (function (BackgroundStatus) {
-    BackgroundStatus[BackgroundStatus["INIT"] = 0] = "INIT";
-    BackgroundStatus[BackgroundStatus["GAMING"] = 1] = "GAMING";
-    BackgroundStatus[BackgroundStatus["PAUSE"] = 2] = "PAUSE";
+    BackgroundStatus[BackgroundStatus["LOADING"] = 0] = "LOADING";
+    BackgroundStatus[BackgroundStatus["INIT"] = 1] = "INIT";
+    BackgroundStatus[BackgroundStatus["GAMING"] = 2] = "GAMING";
+    BackgroundStatus[BackgroundStatus["PAUSE"] = 3] = "PAUSE";
 })(BackgroundStatus || (BackgroundStatus = {}));
 //# sourceMappingURL=GameEnum.js.map

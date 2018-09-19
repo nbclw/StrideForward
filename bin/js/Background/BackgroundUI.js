@@ -28,7 +28,7 @@ var BackgroundUI;
             _this.btnHeight = _this.btnWidth / 2;
             _this.CreateUI();
             _this.addChild(_this.initArea);
-            _this.bgStatus = BackgroundStatus.INIT;
+            _this.bgStatus = BackgroundStatus.LOADING;
             return _this;
         }
         Backgrounds.prototype.LoadInitArea = function () {
