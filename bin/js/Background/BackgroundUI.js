@@ -23,33 +23,73 @@ var BackgroundUI;
         __extends(Backgrounds, _super);
         function Backgrounds() {
             var _this = _super.call(this) || this;
-            _this.gameArea = new Sprite();
-            _this.gameArea.width = gloablWidth;
-            _this.gameArea.height = gloablHeight;
-            _this.gameArea.loadImage('../laya/assets/gamearea.png', 0, 0, _this.gameArea.width, _this.gameArea.height);
-            _this.addChild(_this.gameArea);
-            _this.btnWalk20 = new Button();
-            _this.btnWalk20.pos(0, 0);
-            _this.btnWalk20.label = '20';
-            _this.btnWalk20.loadImage('../laya/assets/white.png');
-            _this.addChild(_this.btnWalk20);
-            _this.btnWalk30 = new Button();
-            _this.btnWalk30.pos(60, 0);
-            _this.btnWalk30.label = '30';
-            _this.btnWalk30.loadImage('../laya/assets/white.png');
-            _this.addChild(_this.btnWalk30);
-            _this.btnWalk50 = new Button();
-            _this.btnWalk50.pos(120, 0);
-            _this.btnWalk50.label = '50';
-            _this.btnWalk50.loadImage('../laya/assets/white.png');
-            _this.addChild(_this.btnWalk50);
-            _this.btnWalk100 = new Button();
-            _this.btnWalk100.pos(180, 0);
-            _this.btnWalk100.label = '100';
-            _this.btnWalk100.loadImage('../laya/assets/white.png');
-            _this.addChild(_this.btnWalk100);
+            _this.size(gloablWidth, gloablHeight);
+            _this.btnWidth = _this.width / 10;
+            _this.btnHeight = _this.btnWidth / 2;
+            _this.CreateUI();
+            _this.addChild(_this.initArea);
+            _this.bgStatus = BackgroundStatus.INIT;
             return _this;
         }
+        Backgrounds.prototype.LoadInitArea = function () {
+            if (this.bgStatus == BackgroundStatus.INIT)
+                return;
+            this.RemoveAllArea();
+            this.addChild(this.initArea);
+        };
+        Backgrounds.prototype.LoadGameArea = function () {
+            if (this.bgStatus == BackgroundStatus.GAMING)
+                return;
+            this.RemoveAllArea();
+            this.addChild(this.gameArea);
+        };
+        Backgrounds.prototype.RemoveAllArea = function () {
+            for (var i = 0; i < this._childs.length; i++)
+                this.removeChild(this._childs[i]);
+        };
+        //创建各个元素
+        Backgrounds.prototype.CreateUI = function () {
+            this.initArea = new Sprite();
+            this.initArea.size(this.width, this.height);
+            this.initArea.loadImage(GameGlobal.RESOURCES.IMG.INITAREA, 0, 0, this.initArea.width, this.initArea.height);
+            this.btnEnter = new Button();
+            this.btnEnter.size(this.btnWidth, this.btnHeight);
+            this.btnEnter.pos((this.width - this.btnWidth) / 2, this.height / 2 - 2 * this.btnHeight);
+            this.btnEnter.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnEnter.width, this.btnEnter.height);
+            this.btnEnter.label = '开始游戏';
+            this.initArea.addChild(this.btnEnter);
+            this.btnRank = new Button();
+            this.btnRank.size(this.btnWidth, this.btnHeight);
+            this.btnRank.pos((this.width - this.btnWidth) / 2, this.height / 2);
+            this.btnRank.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnRank.width, this.btnRank.height);
+            this.btnRank.label = '排行榜';
+            this.initArea.addChild(this.btnRank);
+            this.gameArea = new Sprite();
+            this.gameArea.size(this.width, this.height);
+            this.gameArea.loadImage(GameGlobal.RESOURCES.IMG.GAMEAREA, 0, 0, this.gameArea.width, this.gameArea.height);
+            this.btnBack = new Button();
+            this.btnBack.size(this.btnWidth, this.btnHeight);
+            this.btnBack.pos(this.btnHeight, this.btnHeight);
+            this.btnBack.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnBack.width, this.btnBack.height);
+            this.btnBack.label = '返回';
+            this.gameArea.addChild(this.btnBack);
+            this.btnPause = new Button();
+            this.btnPause.size(this.btnWidth, this.btnHeight);
+            this.btnPause.pos(this.btnWidth + this.btnHeight, this.btnHeight);
+            this.btnPause.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnPause.width, this.btnPause.height);
+            this.btnPause.label = '暂停';
+            this.gameArea.addChild(this.btnPause);
+            this.btnRePlay = new Button();
+            this.btnRePlay.size(this.btnWidth, this.btnHeight);
+            this.btnRePlay.pos(2 * (this.btnWidth + this.btnHeight), this.btnHeight);
+            this.btnRePlay.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnRePlay.width, this.btnRePlay.height);
+            this.btnRePlay.label = '重玩';
+            this.gameArea.addChild(this.btnRePlay);
+            this.btnPlay = new Button();
+            this.btnPlay.size(this.btnWidth, this.btnHeight);
+            this.btnPlay.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnPlay.width, this.btnPlay.height);
+            this.btnPlay.label = '继续';
+        };
         return Backgrounds;
     }(View));
     BackgroundUI.Backgrounds = Backgrounds;

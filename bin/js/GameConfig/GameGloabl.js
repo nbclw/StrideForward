@@ -38,6 +38,15 @@ var GameGlobal = /** @class */ (function () {
         _a[GameGlobal.BONE_LEFTDOWNLEG] = { Rotation: 0, Length: 1 },
         _a[GameGlobal.BONE_LEFTFOOT] = { Rotation: -90, Length: 0.3 },
         _a);
+    GameGlobal.RESOURCES = {
+        IMG: {
+            BONESKIN: '../laya/assets/defeaultSkin.png',
+            GAMEAREA: '../laya/assets/gamearea.png',
+            WHITE: '../laya/assets/white.png',
+            SHOWAREA: '../laya/assets/showarea.png',
+            INITAREA: '../laya/assets/showarea.png',
+        }
+    };
     return GameGlobal;
 }());
 //# sourceMappingURL=GameGloabl.js.map

@@ -5,19 +5,24 @@ var GameControl;
 (function (GameControl) {
     var b = false;
     var Control = /** @class */ (function () {
-        function Control(character, characterControl, bg) {
+        function Control() {
             this.pressUnitTime = 100; //按下的单位时间，毫秒为单位
             this.pressMaxTime = 4000; //按下的最大时间，毫秒为单位
-            this.character = character;
-            this.characterControl = characterControl;
-            this.bg = bg;
+            this.ActionInit();
         }
+        Control.prototype.ActionInit = function () {
+            this.character = new Character('caster', 150, 300);
+            this.character.CharacterPos(gloablWidth / 2, gloablHeight / 2);
+            this.character.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.character.width, this.character.height);
+            this.characterControl = new CharacterCon(this.character);
+            this.bg = new Background();
+        };
         Control.prototype.StageInit = function () {
             Laya.stage.addChild(this.bg);
-            Laya.stage.addChild(this.character);
+            //Laya.stage.addChild(this.character);
         };
         Control.prototype.StageEventInit = function () {
-            Laya.stage.on(Laya.Event.RIGHT_MOUSE_DOWN, this, this.rightMouseHandler);
+            //Laya.stage.on(Laya.Event.RIGHT_MOUSE_DOWN, this, this.rightMouseHandler);
             this.bg.btnWalk20.clickHandler = Handler.create(this, this.btnClick, [0.2], false);
             this.bg.btnWalk30.clickHandler = Handler.create(this, this.btnClick, [0.3], false);
             this.bg.btnWalk50.clickHandler = Handler.create(this, this.btnClick, [0.5], false);

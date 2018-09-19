@@ -37,4 +37,14 @@ class GameGlobal {
         [GameGlobal.BONE_LEFTFOOT]: { Rotation: -90, Length: 0.3 }
     }
 
+
+    public static readonly RESOURCES = {
+        IMG: {
+            BONESKIN: '../laya/assets/defeaultSkin.png',
+            GAMEAREA: '../laya/assets/gamearea.png',
+            WHITE: '../laya/assets/white.png',
+            SHOWAREA: '../laya/assets/showarea.png',
+            INITAREA: '../laya/assets/showarea.png',
+        }
+    }
 }

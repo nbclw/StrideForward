@@ -15,7 +15,7 @@ module BoneModal {
 			if (skin != undefined)
 				this.skin = skin;
 			else
-				this.skin = '../laya/assets/defeaultSkin.png';
+				this.skin = GameGlobal.RESOURCES.IMG.BONESKIN;
 		}
 		private minRotation: number;
 		private maxRotation: number;

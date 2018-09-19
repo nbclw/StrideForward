@@ -4,10 +4,8 @@
 module GameControl {
 	let b = false;
 	export class Control {
-		constructor(character: Character, characterControl: CharacterCon, bg: Background) {
-			this.character = character;
-			this.characterControl = characterControl;
-			this.bg = bg;
+		constructor() {
+			this.ActionInit();
 		}
 		private character: Character;
 		private characterControl: CharacterCon;
@@ -16,13 +14,26 @@ module GameControl {
 		private pressMaxTime: number = 4000;//按下的最大时间，毫秒为单位
 		private pressTime: number;//按下的时间，毫秒为单位
 
+		private ActionInit(): void {
+			this.character = new Character('caster', 150, 300);
+			this.character.CharacterPos(gloablWidth / 2, gloablHeight / 2);
+			this.character.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.character.width, this.character.height);
+
+			this.characterControl = new CharacterCon(this.character);
+
+			this.bg = new Background();
+		}
+
 		public StageInit(): void {
 			Laya.stage.addChild(this.bg);
-			Laya.stage.addChild(this.character);
+
+
+
+			//Laya.stage.addChild(this.character);
 		}
 
 		public StageEventInit(): void {
-			Laya.stage.on(Laya.Event.RIGHT_MOUSE_DOWN, this, this.rightMouseHandler);
+			//Laya.stage.on(Laya.Event.RIGHT_MOUSE_DOWN, this, this.rightMouseHandler);
 			this.bg.btnWalk20.clickHandler = Handler.create(this, this.btnClick, [0.2], false);
 			this.bg.btnWalk30.clickHandler = Handler.create(this, this.btnClick, [0.3], false);
 			this.bg.btnWalk50.clickHandler = Handler.create(this, this.btnClick, [0.5], false);
@@ -43,7 +54,7 @@ module GameControl {
 		}
 		private MouseUpEvent(e: Event): void {
 			Laya.timer.clear(this, this.LogMouseDownTime);
-			var pre = this.pressTime < this.pressMaxTime ? this.pressTime/ this.pressMaxTime:1;
+			var pre = this.pressTime < this.pressMaxTime ? this.pressTime / this.pressMaxTime : 1;
 			this.characterControl.Wlak(pre);
 		}
 		private LogMouseDownTime(): void {

@@ -30,7 +30,7 @@ var BoneModal;
             if (skin != undefined)
                 _this.skin = skin;
             else
-                _this.skin = '../laya/assets/defeaultSkin.png';
+                _this.skin = GameGlobal.RESOURCES.IMG.BONESKIN;
             return _this;
         }
         Bone.prototype.BonePosAndRotation = function (x, y, rotation) {

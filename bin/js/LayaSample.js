@@ -9,22 +9,16 @@ var CharacterCon = CharacterControl.Control;
 var GameCon = GameControl.Control;
 var gloablWidth = 600;
 var gloablHeight = 400;
-var skins = ['../laya/assets/white.png', '../laya/assets/defeaultSkin.png', '../laya/assets/gamearea.png'];
 // 程序入口
 var GameMain = /** @class */ (function () {
     function GameMain() {
-        Laya.loader.load(skins, Handler.create(this, this.GameInit));
+        this.GameInit();
     }
     GameMain.prototype.GameInit = function () {
-        var caster = new Character('caster', 150, 300);
-        caster.CharacterPos(gloablWidth / 2, gloablHeight / 2);
-        caster.loadImage(skins[0], 0, 0, caster.width, caster.height);
-        var casterControl = new CharacterCon(caster);
-        var bg = new Background();
-        var gameControl = new GameCon(caster, casterControl, bg);
+        var gameControl = new GameCon();
         gameControl.StageInit();
-        gameControl.StageEventInit();
-        gameControl.GameStart();
+        //gameControl.StageEventInit();
+        //gameControl.GameStart();
     };
     return GameMain;
 }());
