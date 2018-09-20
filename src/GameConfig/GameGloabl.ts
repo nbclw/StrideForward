@@ -3,7 +3,7 @@
 */
 class GameGlobal {
     public static readonly RAD_VALUE: number = 2 * Math.PI / 360;
-    public static readonly TWEENTIME: number = 4000;
+    public static readonly TWEENTIME: number = 500;
 
     public static readonly BONE_BODY: string = 'BONEBODY';
     public static readonly BONE_HEAD: string = 'BONEHEAD';
@@ -46,6 +46,7 @@ class GameGlobal {
             
             BONESKIN: '../laya/assets/defeaultSkin.png',
             GAMEAREA: '../laya/assets/gamearea.png',
+            HITAREA: '../laya/assets/hitarea.png',
             WHITE: '../laya/assets/white.png',
             INITAREA: '../laya/assets/showarea.png',
             LOADAREA: '../laya/assets/loadarea.png',

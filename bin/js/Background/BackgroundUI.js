@@ -19,6 +19,7 @@ var BackgroundUI;
     var View = Laya.View;
     var Sprite = Laya.Sprite;
     var Button = Laya.Button;
+    var Dialog = Laya.Dialog;
     var Backgrounds = /** @class */ (function (_super) {
         __extends(Backgrounds, _super);
         function Backgrounds() {
@@ -28,7 +29,6 @@ var BackgroundUI;
             _this.btnWidth = _this.width / 10;
             _this.btnHeight = _this.btnWidth / 2;
             _this.CreateUI();
-            _this.SetButtonEvent();
             _this.bgStatus = BackgroundStatus.LOADING;
             return _this;
         }
@@ -43,7 +43,7 @@ var BackgroundUI;
         Backgrounds.prototype.LoadGameArea = function (dir) {
             if (this.bgStatus == BackgroundStatus.GAMING)
                 return;
-            var btns = [this.btnBack];
+            var btns = [this.btnBack, this.btnPause, this.btnRePlay];
             this.SetButtonsDisabled(btns, true);
             this.LoadArea(this.gameArea, dir, btns);
             this.bgStatus = BackgroundStatus.GAMING;
@@ -73,21 +73,22 @@ var BackgroundUI;
                         initX = this.width;
                         break;
                 }
-                if (initX > 0 || initY > 0) {
+                if (initX != 0 || initY != 0) {
                     area.pos(initX, initY);
                     if (this.currArea != null) {
                         Tween.to(this.currArea, { x: -initX, y: -initY }, GameGlobal.TWEENTIME, Ease['expoOut'], Handler.create(this, function () {
                             this.removeChild(this.currArea);
+                            this.currArea = area;
                         }));
                     }
                     else
                         this.currArea = area;
                     Tween.to(area, { x: 0, y: 0 }, GameGlobal.TWEENTIME, Ease['expoOut'], Handler.create(this, function () {
-                        this.currArea = area;
                         this.SetButtonsDisabled(btns, false);
                     }));
                 }
                 else {
+                    area.pos(0, 0);
                     if (this.currArea != null)
                         this.removeChild(this.currArea);
                     this.currArea = area;
@@ -98,17 +99,6 @@ var BackgroundUI;
         Backgrounds.prototype.SetButtonsDisabled = function (btns, disabled) {
             for (var i = 0; i < btns.length; i++)
                 btns[i].disabled = disabled;
-        };
-        Backgrounds.prototype.SetButtonEvent = function () {
-            this.btnEnter.clickHandler = Handler.create(this, function () {
-                this.LoadGameArea(LoadDirection.DOWN);
-            }, [], false);
-            this.btnRank.clickHandler = Handler.create(this, function () {
-                console.log('排行榜');
-            }, [], false);
-            this.btnBack.clickHandler = Handler.create(this, function () {
-                this.LoadInitArea(LoadDirection.UP);
-            }, [], false);
         };
         //创建各个元素
         Backgrounds.prototype.CreateUI = function () {
@@ -130,28 +120,37 @@ var BackgroundUI;
             this.gameArea = new Sprite();
             this.gameArea.size(this.width, this.height);
             this.gameArea.loadImage(GameGlobal.RESOURCES.IMG.GAMEAREA, 0, 0, this.gameArea.width, this.gameArea.height);
+            this.hitArea = new Sprite();
+            this.hitArea.size(this.gameArea.width, this.gameArea.height - this.btnHeight);
+            this.hitArea.pos(0, this.btnHeight);
+            this.hitArea.loadImage(GameGlobal.RESOURCES.IMG.HITAREA, 0, 0, this.gameArea.width, this.gameArea.height - this.btnHeight);
+            this.gameArea.addChild(this.hitArea);
             this.btnBack = new Button();
             this.btnBack.size(this.btnWidth, this.btnHeight);
-            this.btnBack.pos(this.btnHeight, this.btnHeight);
+            this.btnBack.pos(this.btnHeight, 0);
             this.btnBack.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnBack.width, this.btnBack.height);
             this.btnBack.label = '返回';
             this.gameArea.addChild(this.btnBack);
             this.btnPause = new Button();
-            this.btnPause.size(2 * this.btnWidth, this.btnHeight);
-            this.btnPause.pos(this.btnWidth + this.btnHeight, this.btnHeight);
+            this.btnPause.size(this.btnWidth, this.btnHeight);
+            this.btnPause.pos(this.btnWidth + 2 * this.btnHeight, 0);
             this.btnPause.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnPause.width, this.btnPause.height);
             this.btnPause.label = '暂停';
             this.gameArea.addChild(this.btnPause);
             this.btnRePlay = new Button();
             this.btnRePlay.size(this.btnWidth, this.btnHeight);
-            this.btnRePlay.pos(2 * (this.btnWidth + this.btnHeight) + this.btnWidth, this.btnHeight);
+            this.btnRePlay.pos(2 * (this.btnWidth + this.btnHeight) + this.btnHeight, 0);
             this.btnRePlay.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnRePlay.width, this.btnRePlay.height);
             this.btnRePlay.label = '重玩';
             this.gameArea.addChild(this.btnRePlay);
+            this.dlgPause = new Dialog();
+            this.dlgPause.size(this.width, this.height);
             this.btnPlay = new Button();
             this.btnPlay.size(this.btnWidth, this.btnHeight);
+            this.btnPlay.pos((this.dlgPause.width - this.btnPlay.width) / 2, (this.dlgPause.height - this.btnPlay.height) / 2);
             this.btnPlay.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnPlay.width, this.btnPlay.height);
             this.btnPlay.label = '继续';
+            this.dlgPause.addChild(this.btnPlay);
         };
         return Backgrounds;
     }(View));

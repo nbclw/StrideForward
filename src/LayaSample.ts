@@ -27,7 +27,7 @@ class GameMain {
         progress.progressBar.changeHandler = new Handler(this, this.progressBar_Changed, [progress]);
 
         //clw
-        Laya.timer.loop(400, this, function () {
+        Laya.timer.loop(100, this, function () {
             progress.progressBar.value += 0.2;
         });
     }
@@ -35,18 +35,16 @@ class GameMain {
     private progressBar_Changed(progress: Progress, value: number): void {
         if (value >= 1) {
             Laya.timer.clearAll(this);
+            this.GameInit();
             Tween.to(progress, { y: -gloablHeight }, GameGlobal.TWEENTIME, Ease['expoOut'], Handler.create(this, function () {
                 Laya.stage.removeChild(progress);
             }));
-            this.GameInit();
         }
     }
 
     private GameInit(): void {
         let gameControl: GameCon = new GameCon();
         gameControl.StageInit();
-        //gameControl.StageEventInit();
-        //gameControl.GameStart();
     }
 }
 
@@ -55,7 +53,7 @@ Laya.MiniAdpter.init();
 //程序入口
 Laya.init(gloablWidth, gloablHeight, WebGL);
 //开启统计信息
-Laya.Stat.show(0, 200);
+Laya.Stat.show(gloablWidth - 120, gloablHeight - 80);
 
 new GameMain();
 //'portrait'

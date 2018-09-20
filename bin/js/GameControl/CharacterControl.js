@@ -27,6 +27,7 @@ var CharacterControl;
             }
             this.ResetConfig();
             this.LoadBonesSkin(this.character.characterBones);
+            this.ResetBones();
             this.isReady = true;
         };
         //隐藏

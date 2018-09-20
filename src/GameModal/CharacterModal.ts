@@ -55,11 +55,6 @@ module CharacterModal {
 			this.ResetBones();
 		}
 
-		//定位角色
-		public CharacterPos(x: number, y: number): void {
-			this.pos(x - this.width / 2, y - this.height / 2);
-		}
-
 		//获取左脚与右脚的横向距离差
 		public GetDistanceByLtoR(): number {
 			return this.leftFootBone.endPoint.x - this.rightFootBone.endPoint.x - this.legsInter;

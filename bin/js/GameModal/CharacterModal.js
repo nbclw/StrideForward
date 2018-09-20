@@ -40,10 +40,6 @@ var CharacterModal;
             this.CreateBones();
             this.ResetBones();
         };
-        //定位角色
-        Character.prototype.CharacterPos = function (x, y) {
-            this.pos(x - this.width / 2, y - this.height / 2);
-        };
         //获取左脚与右脚的横向距离差
         Character.prototype.GetDistanceByLtoR = function () {
             return this.leftFootBone.endPoint.x - this.rightFootBone.endPoint.x - this.legsInter;

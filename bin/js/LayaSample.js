@@ -22,24 +22,22 @@ var GameMain = /** @class */ (function () {
         Laya.stage.addChild(progress);
         progress.progressBar.changeHandler = new Handler(this, this.progressBar_Changed, [progress]);
         //clw
-        Laya.timer.loop(400, this, function () {
+        Laya.timer.loop(100, this, function () {
             progress.progressBar.value += 0.2;
         });
     };
     GameMain.prototype.progressBar_Changed = function (progress, value) {
         if (value >= 1) {
             Laya.timer.clearAll(this);
+            this.GameInit();
             Tween.to(progress, { y: -gloablHeight }, GameGlobal.TWEENTIME, Ease['expoOut'], Handler.create(this, function () {
                 Laya.stage.removeChild(progress);
             }));
-            this.GameInit();
         }
     };
     GameMain.prototype.GameInit = function () {
         var gameControl = new GameCon();
         gameControl.StageInit();
-        //gameControl.StageEventInit();
-        //gameControl.GameStart();
     };
     return GameMain;
 }());
@@ -48,7 +46,7 @@ Laya.MiniAdpter.init();
 //程序入口
 Laya.init(gloablWidth, gloablHeight, WebGL);
 //开启统计信息
-Laya.Stat.show(0, 200);
+Laya.Stat.show(gloablWidth - 120, gloablHeight - 80);
 new GameMain();
 //'portrait'
 //window.innerWidth

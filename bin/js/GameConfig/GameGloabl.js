@@ -6,7 +6,7 @@ var GameGlobal = /** @class */ (function () {
     function GameGlobal() {
     }
     GameGlobal.RAD_VALUE = 2 * Math.PI / 360;
-    GameGlobal.TWEENTIME = 4000;
+    GameGlobal.TWEENTIME = 500;
     GameGlobal.BONE_BODY = 'BONEBODY';
     GameGlobal.BONE_HEAD = 'BONEHEAD';
     GameGlobal.BONE_NECK = 'BONENECK';
@@ -45,6 +45,7 @@ var GameGlobal = /** @class */ (function () {
             PROGRESS_EMPTY: '../laya/assets/progress$bar.png',
             BONESKIN: '../laya/assets/defeaultSkin.png',
             GAMEAREA: '../laya/assets/gamearea.png',
+            HITAREA: '../laya/assets/hitarea.png',
             WHITE: '../laya/assets/white.png',
             INITAREA: '../laya/assets/showarea.png',
             LOADAREA: '../laya/assets/loadarea.png',

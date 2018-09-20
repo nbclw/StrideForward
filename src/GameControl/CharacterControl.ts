@@ -34,6 +34,7 @@ module CharacterControl {
 			}
 			this.ResetConfig();
 			this.LoadBonesSkin(this.character.characterBones);
+			this.ResetBones();
 			this.isReady = true;
 		}
 
