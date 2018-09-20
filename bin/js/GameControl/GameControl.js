@@ -19,6 +19,7 @@ var GameControl;
         };
         Control.prototype.StageInit = function () {
             Laya.stage.addChild(this.bg);
+            this.bg.LoadInitArea(LoadDirection.DOWN);
             //Laya.stage.addChild(this.character);
         };
         Control.prototype.StageEventInit = function () {
@@ -29,9 +30,9 @@ var GameControl;
             this.bg.btnWalk100.clickHandler = Handler.create(this, this.btnClick, [1], false);
         };
         Control.prototype.GameStart = function () {
-            this.bg.gameArea.on(Laya.Event.MOUSE_DOWN, this, this.MouseDownEvent);
-            this.bg.gameArea.on(Laya.Event.MOUSE_UP, this, this.MouseUpEvent);
-            this.bg.gameArea.on(Laya.Event.MOUSE_OUT, this, this.MouseOutEvent); //防止意外，按住的时候移动到别的位置，就监听不到mouseup事件了
+            // this.bg.gameArea.on(Laya.Event.MOUSE_DOWN, this, this.MouseDownEvent);
+            // this.bg.gameArea.on(Laya.Event.MOUSE_UP, this, this.MouseUpEvent);
+            // this.bg.gameArea.on(Laya.Event.MOUSE_OUT, this, this.MouseOutEvent);//防止意外，按住的时候移动到别的位置，就监听不到mouseup事件了
         };
         Control.prototype.MouseDownEvent = function (e) {
             this.pressTime = 0;

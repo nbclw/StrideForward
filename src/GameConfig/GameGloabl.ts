@@ -3,6 +3,7 @@
 */
 class GameGlobal {
     public static readonly RAD_VALUE: number = 2 * Math.PI / 360;
+    public static readonly TWEENTIME: number = 4000;
 
     public static readonly BONE_BODY: string = 'BONEBODY';
     public static readonly BONE_HEAD: string = 'BONEHEAD';

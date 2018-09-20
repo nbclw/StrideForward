@@ -14,3 +14,8 @@ enum BackgroundStatus {
 	GAMING,
 	PAUSE
 }
+
+//方向
+enum LoadDirection {
+	UP, DOWN, LEFT, RIGHT
+}

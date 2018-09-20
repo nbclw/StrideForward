@@ -15,4 +15,12 @@ var BackgroundStatus;
     BackgroundStatus[BackgroundStatus["GAMING"] = 2] = "GAMING";
     BackgroundStatus[BackgroundStatus["PAUSE"] = 3] = "PAUSE";
 })(BackgroundStatus || (BackgroundStatus = {}));
+//方向
+var LoadDirection;
+(function (LoadDirection) {
+    LoadDirection[LoadDirection["UP"] = 0] = "UP";
+    LoadDirection[LoadDirection["DOWN"] = 1] = "DOWN";
+    LoadDirection[LoadDirection["LEFT"] = 2] = "LEFT";
+    LoadDirection[LoadDirection["RIGHT"] = 3] = "RIGHT";
+})(LoadDirection || (LoadDirection = {}));
 //# sourceMappingURL=GameEnum.js.map

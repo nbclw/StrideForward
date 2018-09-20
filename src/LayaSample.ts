@@ -1,5 +1,7 @@
 import WebGL = Laya.WebGL;
 import Handler = Laya.Handler;
+import Tween = Laya.Tween;
+import Ease = Laya.Ease;
 
 //全局参数
 let bonesConfig = GameGlobal.BONESCONFIG;
@@ -22,10 +24,10 @@ class GameMain {
     private Loading(): void {
         let progress: Progress = new Progress();
         Laya.stage.addChild(progress);
-        progress.progressBar.changeHandler = new Handler(this, this.progressBar_Changed,[progress]);
+        progress.progressBar.changeHandler = new Handler(this, this.progressBar_Changed, [progress]);
 
         //clw
-        Laya.timer.loop(1000, this, function () {
+        Laya.timer.loop(400, this, function () {
             progress.progressBar.value += 0.2;
         });
     }
@@ -33,9 +35,10 @@ class GameMain {
     private progressBar_Changed(progress: Progress, value: number): void {
         if (value >= 1) {
             Laya.timer.clearAll(this);
-            //Laya.stage.removeChild(progress);
-            progress.alpha=0.5
-            //this.GameInit();
+            Tween.to(progress, { y: -gloablHeight }, GameGlobal.TWEENTIME, Ease['expoOut'], Handler.create(this, function () {
+                Laya.stage.removeChild(progress);
+            }));
+            this.GameInit();
         }
     }
 

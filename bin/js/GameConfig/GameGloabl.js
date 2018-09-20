@@ -6,6 +6,7 @@ var GameGlobal = /** @class */ (function () {
     function GameGlobal() {
     }
     GameGlobal.RAD_VALUE = 2 * Math.PI / 360;
+    GameGlobal.TWEENTIME = 4000;
     GameGlobal.BONE_BODY = 'BONEBODY';
     GameGlobal.BONE_HEAD = 'BONEHEAD';
     GameGlobal.BONE_NECK = 'BONENECK';
