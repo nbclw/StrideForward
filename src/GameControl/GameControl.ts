@@ -53,7 +53,7 @@ module GameControl {
 
 			this.bg.btnRePlay.clickHandler = Handler.create(this, function () {
 				console.log('重玩')
-				//this.characterControl.ResetBones();
+				//this.characterControl.ResetCharacter();
 			}, [], false);
 		}
 

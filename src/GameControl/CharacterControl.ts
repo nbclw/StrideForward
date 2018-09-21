@@ -27,11 +27,19 @@ module CharacterControl {
 		public Show(): void {
 			if (this.isReady) return;
 
-			let childs: Sprite[] = this.character._childs
-			if (childs.length == 0) {
-				for (var i = 0; i < this.character.characterBones.length; i++)
-					this.character.addChild(this.character.characterBones[i]);
-			}
+			for (var i = 0; i < this.character.characterBones.length; i++)
+				this.character.addChild(this.character.characterBones[i]);
+
+			this.ResetConfig();
+			this.LoadBonesSkin(this.character.characterBones);
+			this.ResetBones();
+			this.isReady = true;
+		}
+
+		//重置
+		public ResetCharacter(): void {
+			this.isReady = false;
+			this.character.ResetConfig();
 			this.ResetConfig();
 			this.LoadBonesSkin(this.character.characterBones);
 			this.ResetBones();
@@ -134,7 +142,7 @@ module CharacterControl {
 		}
 
 		//归位骨骼
-		public ResetBones(): void {
+		private ResetBones(): void {
 			this.character.centerPoint.setTo(this.character.centerPoint.x, this.character.height - this.character.legHeight);
 			var bonesRotation = {
 				[GameGlobal.BONE_BODY]: bonesConfig[GameGlobal.BONE_BODY].Rotation,

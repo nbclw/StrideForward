@@ -40,6 +40,13 @@ module CharacterModal {
 		public leftDownLegBone: Bone;
 		public leftFootBone: Bone;
 
+		public ResetConfig() {
+			if (this.centerPoint == null || this.centerPoint == undefined)
+				this.centerPoint = new Point();
+			this.centerPoint.setTo(this.width / 2, this.height / 2 + this.boneLength / 10);
+			this.ResetBones();
+		}
+
 		private InitCharacter(charName: string, width: number, height: number): void {
 			this.charName = charName;
 			this.width = width;
@@ -47,9 +54,7 @@ module CharacterModal {
 			this.boneLength = this.height / 4;//设置骨骼默认长度
 			this.legsInter = this.boneLength / 5;//两腿间的距离
 
-			if (this.centerPoint == null || this.centerPoint == undefined)
-				this.centerPoint = new Point();
-			this.centerPoint.setTo(this.width / 2, this.height / 2 + this.boneLength / 10);
+			this.ResetConfig();
 			//创建人物骨骼
 			this.CreateBones();
 			this.ResetBones();

@@ -40,7 +40,7 @@ var GameControl;
             }, [], false);
             this.bg.btnRePlay.clickHandler = Handler.create(this, function () {
                 console.log('重玩');
-                this.characterControl.ResetBones();
+                //this.characterControl.ResetBones();
             }, [], false);
         };
         Control.prototype.GameStart = function () {
