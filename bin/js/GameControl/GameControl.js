@@ -39,14 +39,14 @@ var GameControl;
                 this.bg.dlgPause.close();
             }, [], false);
             this.bg.btnRePlay.clickHandler = Handler.create(this, function () {
-                console.log('重玩');
-                //this.characterControl.ResetBones();
+                this.GameReset();
             }, [], false);
         };
         Control.prototype.GameStart = function () {
             this.bg.hitArea.addChild(this.character);
             this.character.pos(10, (this.bg.hitArea.height - this.character.height) / 2);
             this.characterControl.Show();
+            this.characterControl.ResetCharacter();
             this.bg.hitArea.on(Laya.Event.MOUSE_DOWN, this, this.MouseDownEvent);
             this.bg.hitArea.on(Laya.Event.MOUSE_UP, this, this.MouseUpEvent);
             this.bg.hitArea.on(Laya.Event.MOUSE_OUT, this, this.MouseOutEvent); //防止意外，按住的时候移动到别的位置，就监听不到mouseup事件了
@@ -57,6 +57,9 @@ var GameControl;
             this.bg.hitArea.off(Laya.Event.MOUSE_DOWN, this, this.MouseDownEvent);
             this.bg.hitArea.off(Laya.Event.MOUSE_UP, this, this.MouseUpEvent);
             this.bg.hitArea.off(Laya.Event.MOUSE_OUT, this, this.MouseOutEvent);
+        };
+        Control.prototype.GameReset = function () {
+            this.characterControl.ResetCharacter();
         };
         Control.prototype.MouseDownEvent = function (e) {
             this.pressTime = 0;

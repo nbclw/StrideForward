@@ -22,22 +22,26 @@ var CharacterModal;
         __extends(Character, _super);
         function Character(charName, width, height) {
             var _this = _super.call(this) || this;
-            _this.upLegRotationOffset = -6; //大腿的角度偏移
-            _this.downLegRotationOffset = 6; //小腿的角度偏移
+            _this.upLegRotationOffset = -6; //大腿的角度偏移，不会变
+            _this.downLegRotationOffset = 6; //小腿的角度偏移，不会变
             _this.InitCharacter(charName, width, height);
             return _this;
         }
+        Character.prototype.ResetConfig = function () {
+            if (this.centerPoint == null || this.centerPoint == undefined)
+                this.centerPoint = new Point();
+            this.centerPoint.setTo(this.width / 2, this.height / 2 + this.boneLength / 10);
+            this.ResetBones();
+        };
         Character.prototype.InitCharacter = function (charName, width, height) {
             this.charName = charName;
             this.width = width;
             this.height = height;
             this.boneLength = this.height / 4; //设置骨骼默认长度
             this.legsInter = this.boneLength / 5; //两腿间的距离
-            if (this.centerPoint == null || this.centerPoint == undefined)
-                this.centerPoint = new Point();
-            this.centerPoint.setTo(this.width / 2, this.height / 2 + this.boneLength / 10);
             //创建人物骨骼
             this.CreateBones();
+            this.ResetConfig();
             this.ResetBones();
         };
         //获取左脚与右脚的横向距离差
@@ -117,10 +121,10 @@ var CharacterModal;
             this.bodyBone.BonePosAndRotation(this.centerPoint.x, this.centerPoint.y, bonesRotation[GameGlobal.BONE_BODY]);
             this.neckBone.BonePosAndRotation(this.bodyBone.endPoint.x, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_NECK]);
             this.headBone.BonePosAndRotation(this.neckBone.endPoint.x, this.neckBone.endPoint.y, bonesRotation[GameGlobal.BONE_HEAD]);
-            this.rightUpArmBone.BonePosAndRotation(this.bodyBone.endPoint.x - this.boneLength / 8, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_RIGHTUPARM]);
+            this.rightUpArmBone.BonePosAndRotation(this.bodyBone.endPoint.x - this.boneLength / 4, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_RIGHTUPARM]);
             this.rightDownArmBone.BonePosAndRotation(this.rightUpArmBone.endPoint.x, this.rightUpArmBone.endPoint.y, bonesRotation[GameGlobal.BONE_RIGHTDOWNARM]);
             this.rightHandBone.BonePosAndRotation(this.rightDownArmBone.endPoint.x, this.rightDownArmBone.endPoint.y, bonesRotation[GameGlobal.BONE_RIGHTHAND]);
-            this.leftUpArmBone.BonePosAndRotation(this.bodyBone.endPoint.x + this.boneLength / 8, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_LEFTUPARM]);
+            this.leftUpArmBone.BonePosAndRotation(this.bodyBone.endPoint.x + this.boneLength / 4, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_LEFTUPARM]);
             this.leftDownArmBone.BonePosAndRotation(this.leftUpArmBone.endPoint.x, this.leftUpArmBone.endPoint.y, bonesRotation[GameGlobal.BONE_LEFTDOWNARM]);
             this.leftHandBone.BonePosAndRotation(this.leftDownArmBone.endPoint.x, this.leftDownArmBone.endPoint.y, bonesRotation[GameGlobal.BONE_LEFTHAND]);
             this.rightUpLegBone.BonePosAndRotation(this.bodyBone.beginPoint.x - this.legsInter / 2, this.bodyBone.beginPoint.y, bonesRotation[GameGlobal.BONE_RIGHTUPLEG]);

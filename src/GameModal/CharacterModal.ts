@@ -10,18 +10,18 @@ module CharacterModal {
 			this.InitCharacter(charName, width, height);
 		}
 		public charName: string;
-		public centerPoint: Point;//角色中心点
-		public boneLength: number;//骨骼标准长度
+		public centerPoint: Point;//角色中心点，会变
+		public boneLength: number;//骨骼标准长度，不会变
 
-		public upLegRotationOffset: number = -6;//大腿的角度偏移
-		public downLegRotationOffset: number = 6;//小腿的角度偏移
-		public legLength: number;//腿的长度，指正常站立时的长度，因为上下腿存在角度
-		public legHeight: number;//腿的高度
-		public legRotation: number;//腿与水平地面的夹角
-		public walkMaxDistance: number//行走时的最大步长
+		public upLegRotationOffset: number = -6;//大腿的角度偏移，不会变
+		public downLegRotationOffset: number = 6;//小腿的角度偏移，不会变
+		public legLength: number;//腿的长度，指正常站立时的长度，因为上下腿存在角度，不会变
+		public legHeight: number;//腿的高度，不会变
+		public legRotation: number;//腿与水平地面的夹角，不会变
+		public walkMaxDistance: number//行走时的最大步长，不会变
 
-		public legsInter: number;//两腿间的间隔
-		public legsRotation: number;//两腿间的夹角，左腿在前为正
+		public legsInter: number;//两腿间的间隔，会变
+		public legsRotation: number;//两腿间的夹角，左腿在前为正，会变
 
 		public characterBones: Bone[];
 		public bodyBone: Bone;
@@ -54,9 +54,9 @@ module CharacterModal {
 			this.boneLength = this.height / 4;//设置骨骼默认长度
 			this.legsInter = this.boneLength / 5;//两腿间的距离
 
-			this.ResetConfig();
 			//创建人物骨骼
 			this.CreateBones();
+			this.ResetConfig();
 			this.ResetBones();
 		}
 
@@ -138,10 +138,10 @@ module CharacterModal {
 			this.bodyBone.BonePosAndRotation(this.centerPoint.x, this.centerPoint.y, bonesRotation[GameGlobal.BONE_BODY]);
 			this.neckBone.BonePosAndRotation(this.bodyBone.endPoint.x, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_NECK]);
 			this.headBone.BonePosAndRotation(this.neckBone.endPoint.x, this.neckBone.endPoint.y, bonesRotation[GameGlobal.BONE_HEAD]);
-			this.rightUpArmBone.BonePosAndRotation(this.bodyBone.endPoint.x - this.boneLength / 8, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_RIGHTUPARM]);
+			this.rightUpArmBone.BonePosAndRotation(this.bodyBone.endPoint.x - this.boneLength / 4, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_RIGHTUPARM]);
 			this.rightDownArmBone.BonePosAndRotation(this.rightUpArmBone.endPoint.x, this.rightUpArmBone.endPoint.y, bonesRotation[GameGlobal.BONE_RIGHTDOWNARM]);
 			this.rightHandBone.BonePosAndRotation(this.rightDownArmBone.endPoint.x, this.rightDownArmBone.endPoint.y, bonesRotation[GameGlobal.BONE_RIGHTHAND]);
-			this.leftUpArmBone.BonePosAndRotation(this.bodyBone.endPoint.x + this.boneLength / 8, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_LEFTUPARM]);
+			this.leftUpArmBone.BonePosAndRotation(this.bodyBone.endPoint.x + this.boneLength / 4, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_LEFTUPARM]);
 			this.leftDownArmBone.BonePosAndRotation(this.leftUpArmBone.endPoint.x, this.leftUpArmBone.endPoint.y, bonesRotation[GameGlobal.BONE_LEFTDOWNARM]);
 			this.leftHandBone.BonePosAndRotation(this.leftDownArmBone.endPoint.x, this.leftDownArmBone.endPoint.y, bonesRotation[GameGlobal.BONE_LEFTHAND]);
 			this.rightUpLegBone.BonePosAndRotation(this.bodyBone.beginPoint.x - this.legsInter / 2, this.bodyBone.beginPoint.y, bonesRotation[GameGlobal.BONE_RIGHTUPLEG]);

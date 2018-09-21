@@ -29,10 +29,6 @@ module CharacterControl {
 
 			for (var i = 0; i < this.character.characterBones.length; i++)
 				this.character.addChild(this.character.characterBones[i]);
-
-			this.ResetConfig();
-			this.LoadBonesSkin(this.character.characterBones);
-			this.ResetBones();
 			this.isReady = true;
 		}
 
@@ -79,8 +75,6 @@ module CharacterControl {
 				this.isAction = false;
 				return;
 			}
-
-			var tweenValue = frames[0][GameGlobal.BONE_BODY];
 
 			Laya.timer.loop(this.actionTime / this.frameLength, this, function () {
 				this.SetBones(frames[index], offset, index == (frames.length - 1));
@@ -170,6 +164,7 @@ module CharacterControl {
 			var frames = [];
 			//计算原理是走路结束时，两腿一样的角度，一样的长
 			var stageDis = distance / 2;
+			stageDis = stageDis > this.character.legLength ? this.character.legLength : stageDis;
 			var rotation = Math.asin(stageDis / this.character.legLength) / GameGlobal.RAD_VALUE;
 			var changeRotation = rotation - this.character.legsRotation;
 			this.character.legsRotation = rotation;
