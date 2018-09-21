@@ -52,7 +52,7 @@ var CharacterControl;
                 return;
             if (this.isAction)
                 return;
-            var distance = pre * this.character.walkMaxDistance;
+            var distance = pre * this.character.walkMaxDistance * 2;
             if (distance == 0)
                 return;
             this.isAction = true;
@@ -152,7 +152,7 @@ var CharacterControl;
             var frames = [];
             //计算原理是走路结束时，两腿一样的角度，一样的长
             var stageDis = distance / 2;
-            stageDis = stageDis > this.character.legLength ? this.character.legLength : stageDis;
+            stageDis = Math.abs(stageDis) > Math.abs(this.character.legLength) ? this.character.legLength : stageDis;
             var rotation = Math.asin(stageDis / this.character.legLength) / GameGlobal.RAD_VALUE;
             var changeRotation = rotation - this.character.legsRotation;
             this.character.legsRotation = rotation;

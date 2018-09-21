@@ -57,7 +57,6 @@ module CharacterModal {
 			//创建人物骨骼
 			this.CreateBones();
 			this.ResetConfig();
-			this.ResetBones();
 		}
 
 		//获取左脚与右脚的横向距离差
