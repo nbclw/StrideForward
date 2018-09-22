@@ -23,10 +23,10 @@ var BoneModal;
         function Bone(name, length, minRotation, maxRotation, width, skin) {
             var _this = _super.call(this) || this;
             _this.name = name;
-            _this.boneLength = length;
+            _this.height = _this.boneLength = length;
             _this.minRotation = minRotation != undefined ? minRotation : 0;
             _this.maxRotation = maxRotation != undefined ? maxRotation : 0;
-            _this.boneWidth = width != undefined ? width : 4;
+            _this.width = _this.boneWidth = width != undefined ? width : 4;
             if (skin != undefined)
                 _this.skin = skin;
             else

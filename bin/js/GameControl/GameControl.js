@@ -5,20 +5,126 @@ var GameControl;
 (function (GameControl) {
     var Control = /** @class */ (function () {
         function Control() {
+            this.linesMetre = 2; //距离标志线之间间隔几米
             this.pressUnitTime = 50; //按下的单位时间，毫秒为单位
             this.pressMaxTime = 1000; //按下的最大时间，毫秒为单位
             this.CreateAction();
         }
-        Control.prototype.CreateAction = function () {
-            this.character = new Character('caster', 150, 300);
-            this.character.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.character.width, this.character.height);
-            this.characterControl = new CharacterCon(this.character);
-            this.bg = new Background();
+        Control.prototype.ResetConfig = function () {
+            this.roadDistance = 0;
+            this.roadMetre = 0;
+            this.walkDistance = 0;
         };
         Control.prototype.StageInit = function () {
             Laya.stage.addChild(this.bg);
             this.StageEventInit();
             this.bg.LoadInitArea(LoadDirection.DOWN);
+        };
+        //创建角色场景
+        Control.prototype.CreateAction = function () {
+            this.isGaming = false;
+            this.bg = new Background();
+            this.character = new Character('caster', 100, this.bg.hitArea.height / 2);
+            this.characterControl = new CharacterCon(this.character);
+            this.metreUnit = this.character.height / 2; //角色占地2m，然后计算每米所占的像素
+            //this.character.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.character.width, this.character.height);
+            this.character.onBoneMove = Handler.create(this, this.CharacterBoneMoveEvent, [this.isGaming], false);
+            this.road = new Road(this.bg.hitArea.width, this.bg.hitArea.height / 2);
+            this.road.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.road.width, this.road.height);
+        };
+        //人物骨骼变化事件
+        Control.prototype.CharacterBoneMoveEvent = function (gaming, rightOffsetX, leftOffsetX) {
+            if (!gaming)
+                return;
+            //移动角色场景
+            this.MoveAction(rightOffsetX, leftOffsetX);
+        };
+        //移动角色场景
+        Control.prototype.MoveAction = function (rightOffsetX, leftOffsetX) {
+            var centerX = this.bg.hitArea.width / 2;
+            var characterCenterX = this.character.centerPoint.x + this.character.x;
+            if (characterCenterX < centerX)
+                this.characterControl.CharacterMove(rightOffsetX, leftOffsetX);
+            else {
+                this.road.MoveRoadSignX(rightOffsetX, LoadDirection.LEFT);
+                this.LogWalkDistance(rightOffsetX);
+            }
+        };
+        Control.prototype.LogWalkDistance = function (distance) {
+            distance = Math.abs(distance);
+            this.roadDistance += distance;
+            this.walkDistance += distance;
+            var metre = this.roadDistance / this.metreUnit;
+            var count = (metre - this.roadMetre) / this.linesMetre;
+            if (count >= 1)
+                this.RoadAddLines(count);
+        };
+        //重置道路
+        Control.prototype.ResetRoad = function (x) {
+            this.beginX = x;
+            this.roadDistance = this.road.width - this.beginX + this.walkDistance;
+            var count = this.roadDistance / this.metreUnit / this.linesMetre;
+            this.road.AddSign(RoadSignType.ROADLINE, '起点', this.beginX - this.walkDistance);
+            this.RoadAddLines(count);
+        };
+        //添加路标线
+        Control.prototype.RoadAddLines = function (count) {
+            count = Math.floor(count);
+            for (var i = 0; i < count; i++) {
+                this.roadMetre += this.linesMetre;
+                this.road.AddSign(RoadSignType.ROADLINE, this.roadMetre + '米', this.beginX + this.roadMetre * this.metreUnit - this.walkDistance);
+            }
+        };
+        Control.prototype.GameStart = function () {
+            if (this.isGaming)
+                return;
+            this.ResetConfig();
+            //加入道路
+            this.bg.hitArea.addChild(this.road);
+            this.road.pos(0, this.bg.redLine.y - this.road.height / 2);
+            //加入角色
+            this.bg.hitArea.addChild(this.character);
+            this.character.pos(10, this.bg.redLine.y - this.character.height);
+            this.characterControl.Show();
+            this.characterControl.ResetCharacter();
+            //道路初始化
+            this.ResetRoad(this.character.leftFootBone.endPoint.x + this.character.x);
+            //监听点击事件
+            this.bg.hitArea.on(Laya.Event.MOUSE_DOWN, this, this.MouseDownEvent);
+            this.bg.hitArea.on(Laya.Event.MOUSE_UP, this, this.MouseUpEvent);
+            this.bg.hitArea.on(Laya.Event.MOUSE_OUT, this, this.MouseOutEvent); //防止意外，按住的时候移动到别的位置，就监听不到mouseup事件了
+            this.isGaming = true;
+            this.character.onBoneMove.args = [true];
+        };
+        Control.prototype.GameStop = function () {
+            if (!this.isGaming)
+                return;
+            this.isGaming = false;
+            this.character.onBoneMove.args = [false];
+            //移除角色
+            this.characterControl.Hide();
+            this.bg.hitArea.removeChild(this.character);
+            this.bg.hitArea.off(Laya.Event.MOUSE_DOWN, this, this.MouseDownEvent);
+            this.bg.hitArea.off(Laya.Event.MOUSE_UP, this, this.MouseUpEvent);
+            this.bg.hitArea.off(Laya.Event.MOUSE_OUT, this, this.MouseOutEvent);
+        };
+        Control.prototype.GameReset = function () {
+            this.characterControl.ResetCharacter();
+        };
+        Control.prototype.MouseDownEvent = function (e) {
+            this.pressTime = 0;
+            Laya.timer.loop(this.pressUnitTime, this, this.LogMouseDownTime);
+        };
+        Control.prototype.MouseOutEvent = function (e) {
+            Laya.timer.clear(this, this.LogMouseDownTime);
+        };
+        Control.prototype.MouseUpEvent = function (e) {
+            Laya.timer.clear(this, this.LogMouseDownTime);
+            var pre = this.pressTime < this.pressMaxTime ? this.pressTime / this.pressMaxTime : 1;
+            this.characterControl.Wlak(pre);
+        };
+        Control.prototype.LogMouseDownTime = function () {
+            this.pressTime += this.pressUnitTime;
         };
         Control.prototype.StageEventInit = function () {
             this.bg.btnEnter.clickHandler = Handler.create(this, function () {
@@ -41,41 +147,6 @@ var GameControl;
             this.bg.btnRePlay.clickHandler = Handler.create(this, function () {
                 this.GameReset();
             }, [], false);
-        };
-        Control.prototype.GameStart = function () {
-            this.bg.hitArea.addChild(this.character);
-            this.character.pos(10, (this.bg.hitArea.height - this.character.height) / 2);
-            this.characterControl.Show();
-            this.characterControl.ResetCharacter();
-            this.bg.hitArea.on(Laya.Event.MOUSE_DOWN, this, this.MouseDownEvent);
-            this.bg.hitArea.on(Laya.Event.MOUSE_UP, this, this.MouseUpEvent);
-            this.bg.hitArea.on(Laya.Event.MOUSE_OUT, this, this.MouseOutEvent); //防止意外，按住的时候移动到别的位置，就监听不到mouseup事件了
-        };
-        Control.prototype.GameStop = function () {
-            this.characterControl.Hide();
-            this.bg.hitArea.removeChild(this.character);
-            this.bg.hitArea.off(Laya.Event.MOUSE_DOWN, this, this.MouseDownEvent);
-            this.bg.hitArea.off(Laya.Event.MOUSE_UP, this, this.MouseUpEvent);
-            this.bg.hitArea.off(Laya.Event.MOUSE_OUT, this, this.MouseOutEvent);
-        };
-        Control.prototype.GameReset = function () {
-            this.characterControl.ResetCharacter();
-        };
-        Control.prototype.MouseDownEvent = function (e) {
-            this.pressTime = 0;
-            Laya.timer.loop(this.pressUnitTime, this, this.LogMouseDownTime);
-        };
-        Control.prototype.MouseOutEvent = function (e) {
-            Laya.timer.clear(this, this.LogMouseDownTime);
-        };
-        Control.prototype.MouseUpEvent = function (e) {
-            Laya.timer.clear(this, this.LogMouseDownTime);
-            var pre = this.pressTime < this.pressMaxTime ? this.pressTime / this.pressMaxTime : 1;
-            this.characterControl.Wlak(pre);
-            console.log(pre);
-        };
-        Control.prototype.LogMouseDownTime = function () {
-            this.pressTime += this.pressUnitTime;
         };
         return Control;
     }());

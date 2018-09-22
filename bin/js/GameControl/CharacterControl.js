@@ -16,6 +16,13 @@ var CharacterControl;
             this.actionTime = 400;
             this.walkLeg = WalkLegEnum.LEFT;
         };
+        Control.prototype.CharacterMove = function (rightOffsetX, leftOffsetX) {
+            var x = 0;
+            if (this.walkLeg == WalkLegEnum.LEFT)
+                this.character.x += -rightOffsetX;
+            else
+                this.character.x += -leftOffsetX;
+        };
         //显示
         Control.prototype.Show = function () {
             if (this.isReady)
@@ -29,8 +36,8 @@ var CharacterControl;
             this.isReady = false;
             this.character.ResetConfig();
             this.ResetConfig();
-            this.LoadBonesSkin(this.character.characterBones);
             this.ResetBones();
+            this.LoadBonesSkin(this.character.characterBones);
             this.isReady = true;
         };
         //隐藏
@@ -44,7 +51,7 @@ var CharacterControl;
         //加载骨骼皮肤
         Control.prototype.LoadBonesSkin = function (bones) {
             for (var i = 0; i < bones.length; i++)
-                bones[i].loadImage(bones[i].skin, 0, 0, bones[i].boneWidth, bones[i].boneLength);
+                bones[i].loadImage(bones[i].skin, -bones[i].boneWidth / 2, 0, bones[i].boneWidth, bones[i].boneLength);
         };
         //行走
         Control.prototype.Wlak = function (pre) {

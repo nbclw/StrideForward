@@ -4,11 +4,18 @@ var Tween = Laya.Tween;
 var Ease = Laya.Ease;
 //全局参数
 var bonesConfig = GameGlobal.BONESCONFIG;
+//进度条
 var Progress = LoadProgress.Progress;
+//背景ui
 var Background = BackgroundUI.Backgrounds;
+//角色
 var Bone = BoneModal.Bone;
 var Character = CharacterModal.Character;
 var CharacterCon = CharacterControl.Control;
+//路
+var Road = EndlessRoadModal.EndlessRoad;
+var RoadSign = RoadSignModal.RoadSign;
+//游戏控制器
 var GameCon = GameControl.Control;
 var gloablWidth = 600;
 var gloablHeight = 400;

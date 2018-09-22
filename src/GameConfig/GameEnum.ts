@@ -19,3 +19,13 @@ enum BackgroundStatus {
 enum LoadDirection {
 	UP, DOWN, LEFT, RIGHT
 }
+
+//路上标志物类型：路障、shit、香蕉、炸弹、金、标志线、
+enum RoadSignType {
+	ROADBLOCK,
+	BOOM,
+	SHIT,
+	BANANA,
+	GLOD,
+	ROADLINE
+}

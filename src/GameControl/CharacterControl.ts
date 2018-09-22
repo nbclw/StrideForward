@@ -14,13 +14,21 @@ module CharacterControl {
 		private character: Character;//控制的角色
 		private isReady: boolean = false;//角色是否准备好
 		private isAction: boolean = false;//角色是否在运动
-		private walkLeg: WalkLegEnum = WalkLegEnum.LEFT;//角色运动的腿，默认左腿
+		public walkLeg: WalkLegEnum = WalkLegEnum.LEFT;//角色运动的腿，默认左腿
 		private frameLength: number;
 
 		private ResetConfig(): void {
 			this.frameLength = 16;
 			this.actionTime = 400;
 			this.walkLeg = WalkLegEnum.LEFT;
+		}
+
+		public CharacterMove(rightOffsetX: number, leftOffsetX: number): void {
+			var x = 0;
+			if (this.walkLeg == WalkLegEnum.LEFT) 
+				this.character.x += -rightOffsetX;
+			 else 
+				this.character.x += -leftOffsetX;
 		}
 
 		//显示
@@ -37,8 +45,8 @@ module CharacterControl {
 			this.isReady = false;
 			this.character.ResetConfig();
 			this.ResetConfig();
-			this.LoadBonesSkin(this.character.characterBones);
 			this.ResetBones();
+			this.LoadBonesSkin(this.character.characterBones);
 			this.isReady = true;
 		}
 
@@ -54,7 +62,7 @@ module CharacterControl {
 		//加载骨骼皮肤
 		private LoadBonesSkin(bones: Bone[]): void {
 			for (var i = 0; i < bones.length; i++)
-				bones[i].loadImage(bones[i].skin, 0, 0, bones[i].boneWidth, bones[i].boneLength);
+				bones[i].loadImage(bones[i].skin, -bones[i].boneWidth / 2, 0, bones[i].boneWidth, bones[i].boneLength);
 		}
 
 		//行走

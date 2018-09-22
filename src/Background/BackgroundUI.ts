@@ -36,6 +36,8 @@ module BackgroundUI {
 		public dlgPause: Dialog;//暂停弹出框
 		public btnPlay: Button;//继续按钮
 
+		public redLine: Sprite;//角色与路面的基准线
+
 		public LoadInitArea(dir: LoadDirection): void {
 			if (this.bgStatus == BackgroundStatus.INIT) return;
 			var btns = [this.btnRank, this.btnEnter]
@@ -133,6 +135,13 @@ module BackgroundUI {
 			this.hitArea.pos(0, this.btnHeight);
 			this.hitArea.loadImage(GameGlobal.RESOURCES.IMG.HITAREA, 0, 0, this.gameArea.width, this.gameArea.height - this.btnHeight);
 			this.gameArea.addChild(this.hitArea);
+
+			this.redLine = new Sprite();
+			this.redLine.pos(0, this.hitArea.height * 11 / 16);
+			this.redLine.graphics.drawLine(0, 0, this.hitArea.width, 0, 'red', 2);
+			this.redLine.alpha = 0.5;
+			this.hitArea.addChild(this.redLine);
+			this.redLine.zOrder=999;
 
 			this.btnBack = new Button();
 			this.btnBack.size(this.btnWidth, this.btnHeight);

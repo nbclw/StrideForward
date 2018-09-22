@@ -5,12 +5,18 @@ import Ease = Laya.Ease;
 
 //全局参数
 let bonesConfig = GameGlobal.BONESCONFIG;
-
+//进度条
 import Progress = LoadProgress.Progress;
+//背景ui
 import Background = BackgroundUI.Backgrounds;
+//角色
 import Bone = BoneModal.Bone;
 import Character = CharacterModal.Character;
 import CharacterCon = CharacterControl.Control;
+//路
+import Road = EndlessRoadModal.EndlessRoad;
+import RoadSign = RoadSignModal.RoadSign;
+//游戏控制器
 import GameCon = GameControl.Control;
 
 let gloablWidth = 600;

@@ -40,6 +40,8 @@ module CharacterModal {
 		public leftDownLegBone: Bone;
 		public leftFootBone: Bone;
 
+		public onBoneMove: Handler;
+
 		public ResetConfig() {
 			if (this.centerPoint == null || this.centerPoint == undefined)
 				this.centerPoint = new Point();
@@ -134,6 +136,13 @@ module CharacterModal {
 		}
 		//设置各骨骼角度
 		public SetBonesRotation(bonesRotation): void {
+			var b = (this.onBoneMove != undefined && this.onBoneMove != null && this.onBoneMove.args[0]);
+			var rX1, lX1, rX2, lX2;
+			if (b) {
+				rX1 = this.rightFootBone.endPoint.x;
+				lX1 = this.leftFootBone.endPoint.x;
+			}
+
 			this.bodyBone.BonePosAndRotation(this.centerPoint.x, this.centerPoint.y, bonesRotation[GameGlobal.BONE_BODY]);
 			this.neckBone.BonePosAndRotation(this.bodyBone.endPoint.x, this.bodyBone.endPoint.y, bonesRotation[GameGlobal.BONE_NECK]);
 			this.headBone.BonePosAndRotation(this.neckBone.endPoint.x, this.neckBone.endPoint.y, bonesRotation[GameGlobal.BONE_HEAD]);
@@ -149,6 +158,12 @@ module CharacterModal {
 			this.leftUpLegBone.BonePosAndRotation(this.bodyBone.beginPoint.x + this.legsInter / 2, this.bodyBone.beginPoint.y, bonesRotation[GameGlobal.BONE_LEFTUPLEG]);
 			this.leftDownLegBone.BonePosAndRotation(this.leftUpLegBone.endPoint.x, this.leftUpLegBone.endPoint.y, bonesRotation[GameGlobal.BONE_LEFTDOWNLEG]);
 			this.leftFootBone.BonePosAndRotation(this.leftDownLegBone.endPoint.x, this.leftDownLegBone.endPoint.y, bonesRotation[GameGlobal.BONE_LEFTFOOT]);
+
+			if (b) {
+				rX2 = this.rightFootBone.endPoint.x;
+				lX2 = this.leftFootBone.endPoint.x;
+				this.onBoneMove.runWith([rX2 - rX1, lX2 - lX1]);
+			}
 		}
 	}
 }

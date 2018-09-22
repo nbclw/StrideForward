@@ -23,4 +23,14 @@ var LoadDirection;
     LoadDirection[LoadDirection["LEFT"] = 2] = "LEFT";
     LoadDirection[LoadDirection["RIGHT"] = 3] = "RIGHT";
 })(LoadDirection || (LoadDirection = {}));
+//路上标志物类型：路障、shit、香蕉、炸弹、金、标志线、
+var RoadSignType;
+(function (RoadSignType) {
+    RoadSignType[RoadSignType["ROADBLOCK"] = 0] = "ROADBLOCK";
+    RoadSignType[RoadSignType["BOOM"] = 1] = "BOOM";
+    RoadSignType[RoadSignType["SHIT"] = 2] = "SHIT";
+    RoadSignType[RoadSignType["BANANA"] = 3] = "BANANA";
+    RoadSignType[RoadSignType["GLOD"] = 4] = "GLOD";
+    RoadSignType[RoadSignType["ROADLINE"] = 5] = "ROADLINE";
+})(RoadSignType || (RoadSignType = {}));
 //# sourceMappingURL=GameEnum.js.map

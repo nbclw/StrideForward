@@ -7,6 +7,7 @@ var GameGlobal = /** @class */ (function () {
     }
     GameGlobal.RAD_VALUE = 2 * Math.PI / 360;
     GameGlobal.TWEENTIME = 500;
+    GameGlobal.ROADSIGNSKEW_X = -45;
     GameGlobal.BONE_BODY = 'BONEBODY';
     GameGlobal.BONE_HEAD = 'BONEHEAD';
     GameGlobal.BONE_NECK = 'BONENECK';

@@ -8,10 +8,10 @@ module BoneModal {
 		constructor(name: string, length: number, minRotation?: number, maxRotation?: number, width?: number, skin?: string) {
 			super();
 			this.name = name;
-			this.boneLength = length;
+			this.height = this.boneLength = length;
 			this.minRotation = minRotation != undefined ? minRotation : 0;
 			this.maxRotation = maxRotation != undefined ? maxRotation : 0;
-			this.boneWidth = width != undefined ? width : 4;
+			this.width = this.boneWidth = width != undefined ? width : 4;
 			if (skin != undefined)
 				this.skin = skin;
 			else
@@ -44,7 +44,7 @@ module BoneModal {
 			var b = true;
 			if (this.minRotation != 0 && rotation < this.minRotation) b = false;
 			if (this.maxRotation != 0 && rotation > this.maxRotation) b = false;
-			this.rotation = b ? rotation: this.rotation;
+			this.rotation = b ? rotation : this.rotation;
 
 			this.SetEndPoint();
 		}
