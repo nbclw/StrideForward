@@ -55,34 +55,49 @@ var CharacterModal;
         Character.prototype.CreateBones = function () {
             this.characterBones = [];
             this.bodyBone = new Bone(GameGlobal.BONE_BODY, this.boneLength * bonesConfig[GameGlobal.BONE_BODY].Length);
+            this.bodyBone.cacheAs = 'bitmap';
             this.characterBones.push(this.bodyBone);
             this.neckBone = new Bone(GameGlobal.BONE_NECK, this.boneLength * bonesConfig[GameGlobal.BONE_NECK].Length);
+            this.neckBone.cacheAs = 'bitmap';
             this.characterBones.push(this.neckBone);
             this.headBone = new Bone(GameGlobal.BONE_HEAD, this.boneLength * bonesConfig[GameGlobal.BONE_HEAD].Length);
+            this.headBone.cacheAs = 'bitmap';
             this.characterBones.push(this.headBone);
             this.rightUpArmBone = new Bone(GameGlobal.BONE_RIGHTUPARM, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTUPARM].Length);
+            this.rightUpArmBone.cacheAs = 'bitmap';
             this.characterBones.push(this.rightUpArmBone);
             this.rightDownArmBone = new Bone(GameGlobal.BONE_RIGHTDOWNARM, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTDOWNARM].Length);
+            this.rightDownArmBone.cacheAs = 'bitmap';
             this.characterBones.push(this.rightDownArmBone);
             this.rightHandBone = new Bone(GameGlobal.BONE_RIGHTHAND, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTHAND].Length);
+            this.rightHandBone.cacheAs = 'bitmap';
             this.characterBones.push(this.rightHandBone);
             this.leftUpArmBone = new Bone(GameGlobal.BONE_LEFTUPARM, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTUPARM].Length);
+            this.leftUpArmBone.cacheAs = 'bitmap';
             this.characterBones.push(this.leftUpArmBone);
             this.leftDownArmBone = new Bone(GameGlobal.BONE_LEFTDOWNARM, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTDOWNARM].Length);
+            this.leftDownArmBone.cacheAs = 'bitmap';
             this.characterBones.push(this.leftDownArmBone);
             this.leftHandBone = new Bone(GameGlobal.BONE_LEFTHAND, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTHAND].Length);
+            this.leftHandBone.cacheAs = 'bitmap';
             this.characterBones.push(this.leftHandBone);
             this.rightUpLegBone = new Bone(GameGlobal.BONE_RIGHTUPLEG, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTUPLEG].Length, -84);
+            this.rightUpLegBone.cacheAs = 'bitmap';
             this.characterBones.push(this.rightUpLegBone);
             this.rightDownLegBone = new Bone(GameGlobal.BONE_RIGHTDOWNLEG, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTDOWNLEG].Length);
+            this.rightDownLegBone.cacheAs = 'bitmap';
             this.characterBones.push(this.rightDownLegBone);
             this.rightFootBone = new Bone(GameGlobal.BONE_RIGHTFOOT, this.boneLength * bonesConfig[GameGlobal.BONE_RIGHTFOOT].Length);
+            this.rightFootBone.cacheAs = 'bitmap';
             this.characterBones.push(this.rightFootBone);
             this.leftUpLegBone = new Bone(GameGlobal.BONE_LEFTUPLEG, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTUPLEG].Length, -84);
+            this.leftUpLegBone.cacheAs = 'bitmap';
             this.characterBones.push(this.leftUpLegBone);
             this.leftDownLegBone = new Bone(GameGlobal.BONE_LEFTDOWNLEG, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTDOWNLEG].Length);
+            this.leftDownLegBone.cacheAs = 'bitmap';
             this.characterBones.push(this.leftDownLegBone);
             this.leftFootBone = new Bone(GameGlobal.BONE_LEFTFOOT, this.boneLength * bonesConfig[GameGlobal.BONE_LEFTFOOT].Length);
+            this.leftFootBone.cacheAs = 'bitmap';
             this.characterBones.push(this.leftFootBone);
         };
         //归位骨骼
@@ -118,7 +133,7 @@ var CharacterModal;
         //设置各骨骼角度
         Character.prototype.SetBonesRotation = function (bonesRotation) {
             var b = (this.onBoneMove != undefined && this.onBoneMove != null && this.onBoneMove.args[0]);
-            var rX1, lX1, rX2, lX2;
+            var rX1, lX1, rX2, lX2, cX1, cX2;
             if (b) {
                 rX1 = this.rightFootBone.endPoint.x;
                 lX1 = this.leftFootBone.endPoint.x;

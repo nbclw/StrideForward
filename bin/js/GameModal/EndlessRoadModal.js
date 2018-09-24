@@ -60,6 +60,13 @@ var EndlessRoadModal;
                 this.signPools[roadSign.signType] = [];
             this.signPools[roadSign.signType].push(roadSign);
         };
+        //移除全部
+        EndlessRoad.prototype.RemoveAll = function () {
+            for (var i = 0; i < this._childs.length; i++) {
+                this.RemoveSign(this._childs[i]);
+                i--;
+            }
+        };
         //添加路标
         EndlessRoad.prototype.AddSign = function (type, label, x, y, lineWidth, lineColor) {
             x = (x == undefined || x == null) ? 0 : x;
@@ -70,6 +77,7 @@ var EndlessRoadModal;
             var roadSign;
             if (this.signPools[type].length == 0) {
                 roadSign = new RoadSign(type);
+                roadSign.cacheAs = 'bitmap';
                 roadSign.ShowText();
             }
             else {
@@ -94,8 +102,9 @@ var EndlessRoadModal;
             var color = (lineColor == undefined || lineColor == null || lineColor.length <= 0) ? '#D3D3D3' : lineColor;
             var y = roadSign.height / 2;
             roadSign.graphics.drawLine(0, -y, 0, y, color, roadSign.width);
-            roadSign.skew(GameGlobal.ROADSIGNSKEW_X, 0);
+            roadSign.skewX = GameGlobal.ROADSIGNSKEW_X;
             roadSign.SetText(label, '#D3D3D3', 20);
+            roadSign.txt.pos(-roadSign.txt.text.length / 2 * 20, -y - roadSign.txt.fontSize);
         };
         return EndlessRoad;
     }(Sprite));

@@ -13,7 +13,14 @@ var GameControl;
         Control.prototype.ResetConfig = function () {
             this.roadDistance = 0;
             this.roadMetre = 0;
+            this.roadOffsetX = 0;
             this.walkDistance = 0;
+            this.LogScore();
+            this.character.pos(0, this.bg.redLine.y - this.character.height);
+            this.characterControl.ResetCharacter();
+            //道路初始化
+            this.road.RemoveAll();
+            this.ResetRoad(this.character.leftFootBone.endPoint.x + this.character.x);
         };
         Control.prototype.StageInit = function () {
             Laya.stage.addChild(this.bg);
@@ -38,33 +45,44 @@ var GameControl;
                 return;
             //移动角色场景
             this.MoveAction(rightOffsetX, leftOffsetX);
+            //记录分分值
+            this.LogScore();
         };
         //移动角色场景
         Control.prototype.MoveAction = function (rightOffsetX, leftOffsetX) {
             var centerX = this.bg.hitArea.width / 2;
             var characterCenterX = this.character.centerPoint.x + this.character.x;
+            var dis = 0;
+            if (rightOffsetX < 0)
+                dis = rightOffsetX;
+            else
+                dis = leftOffsetX;
+            this.walkDistance -= dis;
             if (characterCenterX < centerX)
-                this.characterControl.CharacterMove(rightOffsetX, leftOffsetX);
+                this.character.x -= dis;
             else {
-                this.road.MoveRoadSignX(rightOffsetX, LoadDirection.LEFT);
-                this.LogWalkDistance(rightOffsetX);
+                this.road.MoveRoadSignX(dis, LoadDirection.LEFT);
+                this.LogWalkDistance(dis);
             }
         };
         Control.prototype.LogWalkDistance = function (distance) {
             distance = Math.abs(distance);
             this.roadDistance += distance;
-            this.walkDistance += distance;
+            this.roadOffsetX += distance;
             var metre = this.roadDistance / this.metreUnit;
             var count = (metre - this.roadMetre) / this.linesMetre;
             if (count >= 1)
                 this.RoadAddLines(count);
         };
+        Control.prototype.LogScore = function () {
+            this.bg.scoreInfo._childs[0].changeText('score:' + this.walkDistance.toFixed(1));
+        };
         //重置道路
         Control.prototype.ResetRoad = function (x) {
-            this.beginX = x;
-            this.roadDistance = this.road.width - this.beginX + this.walkDistance;
+            this.roadBeginX = x;
+            this.roadDistance = this.road.width - this.roadBeginX + this.roadOffsetX;
             var count = this.roadDistance / this.metreUnit / this.linesMetre;
-            this.road.AddSign(RoadSignType.ROADLINE, '起点', this.beginX - this.walkDistance);
+            this.road.AddSign(RoadSignType.ROADLINE, '起点', this.roadBeginX - this.roadOffsetX);
             this.RoadAddLines(count);
         };
         //添加路标线
@@ -72,23 +90,19 @@ var GameControl;
             count = Math.floor(count);
             for (var i = 0; i < count; i++) {
                 this.roadMetre += this.linesMetre;
-                this.road.AddSign(RoadSignType.ROADLINE, this.roadMetre + '米', this.beginX + this.roadMetre * this.metreUnit - this.walkDistance);
+                this.road.AddSign(RoadSignType.ROADLINE, this.roadMetre + '米' + this.roadMetre * this.metreUnit, this.roadBeginX + this.roadMetre * this.metreUnit - this.roadOffsetX);
             }
         };
         Control.prototype.GameStart = function () {
             if (this.isGaming)
                 return;
-            this.ResetConfig();
             //加入道路
             this.bg.hitArea.addChild(this.road);
             this.road.pos(0, this.bg.redLine.y - this.road.height / 2);
             //加入角色
             this.bg.hitArea.addChild(this.character);
-            this.character.pos(10, this.bg.redLine.y - this.character.height);
             this.characterControl.Show();
-            this.characterControl.ResetCharacter();
-            //道路初始化
-            this.ResetRoad(this.character.leftFootBone.endPoint.x + this.character.x);
+            this.ResetConfig();
             //监听点击事件
             this.bg.hitArea.on(Laya.Event.MOUSE_DOWN, this, this.MouseDownEvent);
             this.bg.hitArea.on(Laya.Event.MOUSE_UP, this, this.MouseUpEvent);
@@ -109,7 +123,11 @@ var GameControl;
             this.bg.hitArea.off(Laya.Event.MOUSE_OUT, this, this.MouseOutEvent);
         };
         Control.prototype.GameReset = function () {
-            this.characterControl.ResetCharacter();
+            this.isGaming = false;
+            this.character.onBoneMove.args = [false];
+            this.ResetConfig();
+            this.isGaming = true;
+            this.character.onBoneMove.args = [true];
         };
         Control.prototype.MouseDownEvent = function (e) {
             this.pressTime = 0;

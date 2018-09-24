@@ -15,6 +15,8 @@ var CharacterControl;
             this.frameLength = 16;
             this.actionTime = 400;
             this.walkLeg = WalkLegEnum.LEFT;
+            this.character.rightFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'black');
+            this.character.leftFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'red');
         };
         Control.prototype.CharacterMove = function (rightOffsetX, leftOffsetX) {
             var x = 0;
@@ -59,7 +61,7 @@ var CharacterControl;
                 return;
             if (this.isAction)
                 return;
-            var distance = pre * this.character.walkMaxDistance * 2;
+            var distance = pre * this.character.walkMaxDistance;
             if (distance == 0)
                 return;
             this.isAction = true;
@@ -77,10 +79,16 @@ var CharacterControl;
                 index++;
                 if (index >= frames.length) {
                     Laya.timer.clearAll(this);
-                    if (this.walkLeg == WalkLegEnum.LEFT)
+                    if (this.walkLeg == WalkLegEnum.LEFT) {
                         this.walkLeg = WalkLegEnum.RIGHT;
-                    else
+                        this.character.leftFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'black');
+                        this.character.rightFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'red');
+                    }
+                    else {
                         this.walkLeg = WalkLegEnum.LEFT;
+                        this.character.rightFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'black');
+                        this.character.leftFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'red');
+                    }
                     this.isAction = false;
                 }
             });

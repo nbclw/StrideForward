@@ -38,6 +38,9 @@ module BackgroundUI {
 
 		public redLine: Sprite;//角色与路面的基准线
 
+		public scoreInfo: Sprite;//分数信息
+
+
 		public LoadInitArea(dir: LoadDirection): void {
 			if (this.bgStatus == BackgroundStatus.INIT) return;
 			var btns = [this.btnRank, this.btnEnter]
@@ -139,9 +142,17 @@ module BackgroundUI {
 			this.redLine = new Sprite();
 			this.redLine.pos(0, this.hitArea.height * 11 / 16);
 			this.redLine.graphics.drawLine(0, 0, this.hitArea.width, 0, 'red', 2);
-			this.redLine.alpha = 0.5;
+			this.redLine.alpha = 0.3;
 			this.hitArea.addChild(this.redLine);
-			this.redLine.zOrder=999;
+			this.redLine.zOrder = 999;
+
+			var txt = new Laya.Text();
+			txt.text = 'score:0';
+			txt.fontSize = 20;
+			this.scoreInfo = new Sprite();
+			this.scoreInfo.pos(this.width / 2, 0)
+			this.scoreInfo.addChild(txt);
+			this.hitArea.addChild(this.scoreInfo);
 
 			this.btnBack = new Button();
 			this.btnBack.size(this.btnWidth, this.btnHeight);

@@ -24,10 +24,11 @@ var RoadSignModal;
             var _this = _super.call(this) || this;
             _this.signType = type;
             _this.txt = new Text();
+            _this.txt.text = '';
             return _this;
         }
         RoadSign.prototype.SetText = function (txt, color, fontSize) {
-            this.txt.text = txt;
+            this.txt.changeText(txt);
             this.txt.color = color;
             this.txt.fontSize = fontSize;
         };

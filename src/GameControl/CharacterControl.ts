@@ -21,13 +21,15 @@ module CharacterControl {
 			this.frameLength = 16;
 			this.actionTime = 400;
 			this.walkLeg = WalkLegEnum.LEFT;
+			this.character.rightFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'black');
+			this.character.leftFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'red')
 		}
 
 		public CharacterMove(rightOffsetX: number, leftOffsetX: number): void {
 			var x = 0;
-			if (this.walkLeg == WalkLegEnum.LEFT) 
+			if (this.walkLeg == WalkLegEnum.LEFT)
 				this.character.x += -rightOffsetX;
-			 else 
+			else
 				this.character.x += -leftOffsetX;
 		}
 
@@ -69,7 +71,7 @@ module CharacterControl {
 		public Wlak(pre: number): void {
 			if (!this.isReady) return;
 			if (this.isAction) return;
-			var distance = pre * this.character.walkMaxDistance * 2;
+			var distance = pre * this.character.walkMaxDistance;
 			if (distance == 0) return;
 
 			this.isAction = true;
@@ -89,10 +91,15 @@ module CharacterControl {
 				index++;
 				if (index >= frames.length) {
 					Laya.timer.clearAll(this);
-					if (this.walkLeg == WalkLegEnum.LEFT)
+					if (this.walkLeg == WalkLegEnum.LEFT) {
 						this.walkLeg = WalkLegEnum.RIGHT;
-					else
+						this.character.leftFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'black');
+						this.character.rightFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'red');
+					} else {
 						this.walkLeg = WalkLegEnum.LEFT;
+						this.character.rightFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'black');
+						this.character.leftFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'red');
+					}
 					this.isAction = false;
 				}
 			});

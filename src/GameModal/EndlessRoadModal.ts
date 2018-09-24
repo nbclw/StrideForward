@@ -50,6 +50,14 @@ module EndlessRoadModal {
 			this.signPools[roadSign.signType].push(roadSign);
 		}
 
+		//移除全部
+		public RemoveAll(): void {
+			for (var i = 0; i < this._childs.length; i++) {
+				this.RemoveSign(this._childs[i]);
+				i--;
+			}
+		}
+
 		//添加路标
 		public AddSign(type: RoadSignType, label: string, x?: number, y?: number, lineWidth?: number, lineColor?: string): void {
 			x = (x == undefined || x == null) ? 0 : x;
@@ -60,6 +68,7 @@ module EndlessRoadModal {
 			let roadSign: RoadSign;
 			if (this.signPools[type].length == 0) {
 				roadSign = new RoadSign(type);
+				roadSign.cacheAs = 'bitmap';
 				roadSign.ShowText();
 			} else {
 				roadSign = this.signPools[type][this.signPools[type].length - 1];
@@ -86,9 +95,14 @@ module EndlessRoadModal {
 			var color = (lineColor == undefined || lineColor == null || lineColor.length <= 0) ? '#D3D3D3' : lineColor;
 			var y = roadSign.height / 2;
 			roadSign.graphics.drawLine(0, -y, 0, y, color, roadSign.width);
-			roadSign.skew(GameGlobal.ROADSIGNSKEW_X, 0);
+			roadSign.skewX = GameGlobal.ROADSIGNSKEW_X;
 
 			roadSign.SetText(label, '#D3D3D3', 20);
+			roadSign.txt.pos(-roadSign.txt.text.length / 2 * 20, -y - roadSign.txt.fontSize);
+		}
+
+		private SetSign_RoadBlock():void{
+			
 		}
 	}
 }

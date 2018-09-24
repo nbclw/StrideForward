@@ -15,19 +15,28 @@ module GameControl {
 		private pressUnitTime: number = 50;//按下的单位时间，毫秒为单位
 		private pressMaxTime: number = 1000;//按下的最大时间，毫秒为单位
 		private pressTime: number;//按下的时间，毫秒为单位
-		private beginX: number;
 
 		private metreUnit: number;//每米所占的像素多少，游戏开始后不会变
 
-		private roadDistance: number;
-		private roadMetre: number;
-		private walkDistance: number;
+		private roadBeginX: number;//道路的启示位置
+		private roadOffsetX: number;//道路偏移量，记录道路路标的偏移位置
+		private roadDistance: number;//道路的总长度，px
+		private roadMetre: number;//道路的总长度，米
+		private walkDistance: number;//走过的总长度，px
 		private isGaming: boolean;
 
 		private ResetConfig(): void {
 			this.roadDistance = 0;
 			this.roadMetre = 0;
+			this.roadOffsetX = 0;
 			this.walkDistance = 0;
+
+			this.LogScore();
+			this.character.pos(0, this.bg.redLine.y - this.character.height);
+			this.characterControl.ResetCharacter();
+			//道路初始化
+			this.road.RemoveAll();
+			this.ResetRoad(this.character.leftFootBone.endPoint.x + this.character.x);
 		}
 
 		public StageInit(): void {
@@ -54,34 +63,46 @@ module GameControl {
 			if (!gaming) return;
 			//移动角色场景
 			this.MoveAction(rightOffsetX, leftOffsetX);
+			//记录分分值
+			this.LogScore();
 		}
 		//移动角色场景
 		private MoveAction(rightOffsetX: number, leftOffsetX: number): void {
 			var centerX = this.bg.hitArea.width / 2;
 			var characterCenterX = this.character.centerPoint.x + this.character.x;
+
+			var dis = 0;
+			if (rightOffsetX < 0) dis = rightOffsetX;
+			else dis = leftOffsetX;
+			this.walkDistance -= dis;
+
 			if (characterCenterX < centerX)
-				this.characterControl.CharacterMove(rightOffsetX, leftOffsetX);
+				this.character.x -= dis;
 			else {
-				this.road.MoveRoadSignX(rightOffsetX, LoadDirection.LEFT);
-				this.LogWalkDistance(rightOffsetX);
+				this.road.MoveRoadSignX(dis, LoadDirection.LEFT);
+				this.LogWalkDistance(dis);
 			}
 		}
 		private LogWalkDistance(distance: number): void {
 			distance = Math.abs(distance);
 			this.roadDistance += distance;
-			this.walkDistance += distance;
+			this.roadOffsetX += distance;
 			var metre = this.roadDistance / this.metreUnit;
 			var count = (metre - this.roadMetre) / this.linesMetre;
 			if (count >= 1)
 				this.RoadAddLines(count);
 		}
+		private LogScore(): void {
+			this.bg.scoreInfo._childs[0].changeText('score:' + this.walkDistance.toFixed(1));
+		}
 
 		//重置道路
 		private ResetRoad(x: number): void {
-			this.beginX = x;
-			this.roadDistance = this.road.width - this.beginX + this.walkDistance;
+			this.roadBeginX = x;
+			this.roadDistance = this.road.width - this.roadBeginX + this.roadOffsetX;
 			var count = this.roadDistance / this.metreUnit / this.linesMetre;
-			this.road.AddSign(RoadSignType.ROADLINE, '起点', this.beginX - this.walkDistance);
+
+			this.road.AddSign(RoadSignType.ROADLINE, '起点', this.roadBeginX - this.roadOffsetX);
 			this.RoadAddLines(count);
 		}
 		//添加路标线
@@ -89,24 +110,21 @@ module GameControl {
 			count = Math.floor(count);
 			for (var i = 0; i < count; i++) {
 				this.roadMetre += this.linesMetre;
-				this.road.AddSign(RoadSignType.ROADLINE, this.roadMetre + '米', this.beginX + this.roadMetre * this.metreUnit - this.walkDistance);
+				this.road.AddSign(RoadSignType.ROADLINE, this.roadMetre + '米' + this.roadMetre * this.metreUnit, this.roadBeginX + this.roadMetre * this.metreUnit - this.roadOffsetX);
 			}
 		}
 
 		private GameStart(): void {
 			if (this.isGaming) return;
 
-			this.ResetConfig();
 			//加入道路
 			this.bg.hitArea.addChild(this.road);
 			this.road.pos(0, this.bg.redLine.y - this.road.height / 2);
 			//加入角色
 			this.bg.hitArea.addChild(this.character);
-			this.character.pos(10, this.bg.redLine.y - this.character.height);
 			this.characterControl.Show();
-			this.characterControl.ResetCharacter();
-			//道路初始化
-			this.ResetRoad(this.character.leftFootBone.endPoint.x + this.character.x);
+
+			this.ResetConfig();
 			//监听点击事件
 			this.bg.hitArea.on(Laya.Event.MOUSE_DOWN, this, this.MouseDownEvent);
 			this.bg.hitArea.on(Laya.Event.MOUSE_UP, this, this.MouseUpEvent);
@@ -128,7 +146,11 @@ module GameControl {
 			this.bg.hitArea.off(Laya.Event.MOUSE_OUT, this, this.MouseOutEvent);
 		}
 		private GameReset(): void {
-			this.characterControl.ResetCharacter();
+			this.isGaming = false;
+			this.character.onBoneMove.args = [false];
+			this.ResetConfig();
+			this.isGaming = true;
+			this.character.onBoneMove.args = [true];
 		}
 
 		private MouseDownEvent(e: Event): void {

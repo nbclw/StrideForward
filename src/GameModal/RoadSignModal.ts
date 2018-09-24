@@ -10,12 +10,13 @@ module RoadSignModal {
 			this.signType = type;
 
 			this.txt = new Text();
+			this.txt.text = '';
 		}
 		public signType: RoadSignType;
 		public txt: Text;
 
 		public SetText(txt: string, color: string, fontSize: number): void {
-			this.txt.text = txt;
+			this.txt.changeText(txt);
 			this.txt.color = color;
 			this.txt.fontSize = fontSize;
 		}
