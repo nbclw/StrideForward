@@ -90,6 +90,9 @@ var EndlessRoadModal;
                 case RoadSignType.ROADLINE:
                     this.SetSign_RoadLine(roadSign, label, lineWidth, lineColor);
                     break;
+                case RoadSignType.ROADBLOCK:
+                    this.SetSign_RoadBlock(roadSign);
+                    break;
                 default:
                     this.signPools[type].push(roadSign);
                     return;
@@ -105,6 +108,12 @@ var EndlessRoadModal;
             roadSign.skewX = GameGlobal.ROADSIGNSKEW_X;
             roadSign.SetText(label, '#D3D3D3', 20);
             roadSign.txt.pos(-roadSign.txt.text.length / 2 * 20, -y - roadSign.txt.fontSize);
+        };
+        EndlessRoad.prototype.SetSign_RoadBlock = function (roadSign) {
+            roadSign.height = this.height / 2;
+            roadSign.width = roadSign.height / 10;
+            roadSign.loadImage(GameGlobal.RESOURCES.IMG.ROADBLOCK, 0, -roadSign.height / 2, roadSign.width, roadSign.height);
+            roadSign.skewX = GameGlobal.ROADSIGNSKEW_X;
         };
         return EndlessRoad;
     }(Sprite));

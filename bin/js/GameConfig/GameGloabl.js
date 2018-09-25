@@ -50,6 +50,7 @@ var GameGlobal = /** @class */ (function () {
             WHITE: '../laya/assets/white.png',
             INITAREA: '../laya/assets/showarea.png',
             LOADAREA: '../laya/assets/loadarea.png',
+            ROADBLOCK: '../laya/assets/black.png',
         }
     };
     return GameGlobal;

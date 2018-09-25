@@ -61,7 +61,7 @@ var CharacterControl;
                 return;
             if (this.isAction)
                 return;
-            var distance = pre * this.character.walkMaxDistance;
+            var distance = pre * this.character.walkMaxDistance * 2;
             if (distance == 0)
                 return;
             this.isAction = true;
@@ -81,13 +81,13 @@ var CharacterControl;
                     Laya.timer.clearAll(this);
                     if (this.walkLeg == WalkLegEnum.LEFT) {
                         this.walkLeg = WalkLegEnum.RIGHT;
-                        this.character.leftFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'black');
+                        this.character.leftFootBone.graphics.drawRect(0, 0, this.character.leftFootBone.width, this.character.leftFootBone.height, null, 'black');
                         this.character.rightFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'red');
                     }
                     else {
                         this.walkLeg = WalkLegEnum.LEFT;
                         this.character.rightFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'black');
-                        this.character.leftFootBone.graphics.drawRect(0, 0, this.character.rightFootBone.width, this.character.rightFootBone.height, null, 'red');
+                        this.character.leftFootBone.graphics.drawRect(0, 0, this.character.leftFootBone.width, this.character.leftFootBone.height, null, 'red');
                     }
                     this.isAction = false;
                 }

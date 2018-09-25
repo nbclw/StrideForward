@@ -15,6 +15,7 @@ var GameControl;
             this.roadMetre = 0;
             this.roadOffsetX = 0;
             this.walkDistance = 0;
+            this.lastBlockX = 0;
             this.LogScore();
             this.character.pos(0, this.bg.redLine.y - this.character.height);
             this.characterControl.ResetCharacter();
@@ -63,6 +64,7 @@ var GameControl;
             else {
                 this.road.MoveRoadSignX(dis, LoadDirection.LEFT);
                 this.LogWalkDistance(dis);
+                this.RoadAddBloack();
             }
         };
         Control.prototype.LogWalkDistance = function (distance) {
@@ -80,10 +82,14 @@ var GameControl;
         //重置道路
         Control.prototype.ResetRoad = function (x) {
             this.roadBeginX = x;
+            this.lastBlockX = x;
+            //增加路标线
             this.roadDistance = this.road.width - this.roadBeginX + this.roadOffsetX;
             var count = this.roadDistance / this.metreUnit / this.linesMetre;
             this.road.AddSign(RoadSignType.ROADLINE, '起点', this.roadBeginX - this.roadOffsetX);
             this.RoadAddLines(count);
+            //增加路障
+            this.RoadAddBloack();
         };
         //添加路标线
         Control.prototype.RoadAddLines = function (count) {
@@ -92,6 +98,18 @@ var GameControl;
                 this.roadMetre += this.linesMetre;
                 this.road.AddSign(RoadSignType.ROADLINE, this.roadMetre + '米' + this.roadMetre * this.metreUnit, this.roadBeginX + this.roadMetre * this.metreUnit - this.roadOffsetX);
             }
+        };
+        //增加路障
+        Control.prototype.RoadAddBloack = function () {
+            while ((this.roadDistance - this.lastBlockX) > this.character.legLength) {
+                var offsetX = this.GetRandomInt(40, 80) * this.character.legLength * 2 / 100;
+                this.lastBlockX += offsetX;
+                this.road.AddSign(RoadSignType.ROADBLOCK, '', this.lastBlockX - this.roadOffsetX);
+            }
+        };
+        //根据最大最小，获取中间随机数，不返回最大值
+        Control.prototype.GetRandomInt = function (min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
         };
         Control.prototype.GameStart = function () {
             if (this.isGaming)

@@ -81,6 +81,9 @@ module EndlessRoadModal {
 				case RoadSignType.ROADLINE:
 					this.SetSign_RoadLine(roadSign, label, lineWidth, lineColor);
 					break;
+				case RoadSignType.ROADBLOCK:
+					this.SetSign_RoadBlock(roadSign);
+					break;
 				default:
 					this.signPools[type].push(roadSign);
 					return;
@@ -101,8 +104,11 @@ module EndlessRoadModal {
 			roadSign.txt.pos(-roadSign.txt.text.length / 2 * 20, -y - roadSign.txt.fontSize);
 		}
 
-		private SetSign_RoadBlock():void{
-			
+		private SetSign_RoadBlock(roadSign: RoadSign): void {
+			roadSign.height = this.height / 2;
+			roadSign.width = roadSign.height / 10;
+			roadSign.loadImage(GameGlobal.RESOURCES.IMG.ROADBLOCK, 0, -roadSign.height / 2, roadSign.width, roadSign.height);
+			roadSign.skewX = GameGlobal.ROADSIGNSKEW_X;
 		}
 	}
 }

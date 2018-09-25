@@ -15,6 +15,7 @@ module GameControl {
 		private pressUnitTime: number = 50;//按下的单位时间，毫秒为单位
 		private pressMaxTime: number = 1000;//按下的最大时间，毫秒为单位
 		private pressTime: number;//按下的时间，毫秒为单位
+		private isGaming: boolean;
 
 		private metreUnit: number;//每米所占的像素多少，游戏开始后不会变
 
@@ -23,13 +24,15 @@ module GameControl {
 		private roadDistance: number;//道路的总长度，px
 		private roadMetre: number;//道路的总长度，米
 		private walkDistance: number;//走过的总长度，px
-		private isGaming: boolean;
+
+		private lastBlockX: number;//最后一个路障的坐标
 
 		private ResetConfig(): void {
 			this.roadDistance = 0;
 			this.roadMetre = 0;
 			this.roadOffsetX = 0;
 			this.walkDistance = 0;
+			this.lastBlockX = 0;
 
 			this.LogScore();
 			this.character.pos(0, this.bg.redLine.y - this.character.height);
@@ -81,6 +84,8 @@ module GameControl {
 			else {
 				this.road.MoveRoadSignX(dis, LoadDirection.LEFT);
 				this.LogWalkDistance(dis);
+
+				this.RoadAddBloack();
 			}
 		}
 		private LogWalkDistance(distance: number): void {
@@ -99,11 +104,15 @@ module GameControl {
 		//重置道路
 		private ResetRoad(x: number): void {
 			this.roadBeginX = x;
+			this.lastBlockX = x;
+
+			//增加路标线
 			this.roadDistance = this.road.width - this.roadBeginX + this.roadOffsetX;
 			var count = this.roadDistance / this.metreUnit / this.linesMetre;
-
 			this.road.AddSign(RoadSignType.ROADLINE, '起点', this.roadBeginX - this.roadOffsetX);
 			this.RoadAddLines(count);
+			//增加路障
+			this.RoadAddBloack();
 		}
 		//添加路标线
 		private RoadAddLines(count: number): void {
@@ -112,6 +121,18 @@ module GameControl {
 				this.roadMetre += this.linesMetre;
 				this.road.AddSign(RoadSignType.ROADLINE, this.roadMetre + '米' + this.roadMetre * this.metreUnit, this.roadBeginX + this.roadMetre * this.metreUnit - this.roadOffsetX);
 			}
+		}
+		//增加路障
+		private RoadAddBloack(): void {
+			while ((this.roadDistance - this.lastBlockX) > this.character.legLength) {
+				var offsetX = this.GetRandomInt(40, 80) * this.character.legLength * 2 / 100;
+				this.lastBlockX += offsetX;
+				this.road.AddSign(RoadSignType.ROADBLOCK, '', this.lastBlockX - this.roadOffsetX);
+			}
+		}
+		//根据最大最小，获取中间随机数，不返回最大值
+		private GetRandomInt(min: number, max: number): number {
+			return Math.floor(Math.random() * (max - min + 1) + min);
 		}
 
 		private GameStart(): void {
