@@ -184,7 +184,11 @@ module GameControl {
 		private MouseUpEvent(e: Event): void {
 			Laya.timer.clear(this, this.LogMouseDownTime);
 			var pre = this.pressTime < this.pressMaxTime ? this.pressTime / this.pressMaxTime : 1;
-			this.characterControl.Wlak(pre);
+			if (!this.characterControl.Wlak(pre)){
+				
+				console.log('game over');
+				this.bg.dlgOver.popup();
+			}
 		}
 		private LogMouseDownTime(): void {
 			this.pressTime += this.pressUnitTime;

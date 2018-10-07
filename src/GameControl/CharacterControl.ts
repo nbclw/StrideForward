@@ -68,7 +68,7 @@ module CharacterControl {
 		}
 
 		//行走
-		public Wlak(pre: number): void {
+		public Wlak(pre: number): boolean {
 			if (!this.isReady) return;
 			if (this.isAction) return;
 			var distance = pre * this.character.walkMaxDistance * 2;
@@ -83,7 +83,7 @@ module CharacterControl {
 			var frames = this.MathRotation(distance);
 			if (frames.length == 0) {
 				this.isAction = false;
-				return;
+				return false;
 			}
 
 			Laya.timer.loop(this.actionTime / this.frameLength, this, function () {
@@ -103,6 +103,8 @@ module CharacterControl {
 					this.isAction = false;
 				}
 			});
+
+			return true;
 		}
 
 		private SetBones(frame, offset, isLast): void {
@@ -181,6 +183,9 @@ module CharacterControl {
 			var stageDis = distance / 2;
 			stageDis = Math.abs(stageDis) > Math.abs(this.character.legLength) ? this.character.legLength : stageDis;
 			var rotation = Math.asin(stageDis / this.character.legLength) / GameGlobal.RAD_VALUE;
+			if (rotation >= 90) {
+				return frames;
+			}
 			var changeRotation = rotation - this.character.legsRotation;
 			this.character.legsRotation = rotation;
 

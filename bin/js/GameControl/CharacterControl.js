@@ -72,7 +72,7 @@ var CharacterControl;
             var frames = this.MathRotation(distance);
             if (frames.length == 0) {
                 this.isAction = false;
-                return;
+                return false;
             }
             Laya.timer.loop(this.actionTime / this.frameLength, this, function () {
                 this.SetBones(frames[index], offset, index == (frames.length - 1));
@@ -92,6 +92,7 @@ var CharacterControl;
                     this.isAction = false;
                 }
             });
+            return true;
         };
         Control.prototype.SetBones = function (frame, offset, isLast) {
             var _a;
@@ -169,6 +170,9 @@ var CharacterControl;
             var stageDis = distance / 2;
             stageDis = Math.abs(stageDis) > Math.abs(this.character.legLength) ? this.character.legLength : stageDis;
             var rotation = Math.asin(stageDis / this.character.legLength) / GameGlobal.RAD_VALUE;
+            if (rotation >= 90) {
+                return frames;
+            }
             var changeRotation = rotation - this.character.legsRotation;
             this.character.legsRotation = rotation;
             var frameUp, frameDown, sign;

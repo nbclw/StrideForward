@@ -36,6 +36,9 @@ module BackgroundUI {
 		public dlgPause: Dialog;//暂停弹出框
 		public btnPlay: Button;//继续按钮
 
+		public dlgOver: Dialog;//结束弹出框
+		public btnGoOn: Button;//继续上次(log)
+
 		public redLine: Sprite;//角色与路面的基准线
 
 		public scoreInfo: Sprite;//分数信息
@@ -184,6 +187,16 @@ module BackgroundUI {
 			this.btnPlay.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnPlay.width, this.btnPlay.height);
 			this.btnPlay.label = '继续';
 			this.dlgPause.addChild(this.btnPlay);
+			
+			this.dlgOver = new Dialog();
+			this.dlgOver.size(this.width, this.height);
+
+			this.btnGoOn = new Button();
+			this.btnGoOn.size(this.btnWidth, this.btnHeight);
+			this.btnGoOn.pos((this.dlgOver.width - this.btnGoOn.width) / 2, (this.dlgOver.height - this.btnGoOn.height) / 2)
+			this.btnGoOn.loadImage(GameGlobal.RESOURCES.IMG.WHITE, 0, 0, this.btnGoOn.width, this.btnGoOn.height);
+			this.btnGoOn.label = '继续上次';
+			this.dlgOver.addChild(this.btnGoOn);
 		}
 	}
 }
