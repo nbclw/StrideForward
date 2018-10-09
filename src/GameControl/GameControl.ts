@@ -6,7 +6,7 @@ module GameControl {
 		constructor() {
 			this.CreateAction();
 		}
-		private readonly linesMetre: number = 2;//距离标志线之间间隔几米
+		private readonly linesMetre: number = 20;//距离标志线之间间隔几米
 		private bg: Background;
 		private character: Character;
 		private characterControl: CharacterCon;
@@ -27,6 +27,11 @@ module GameControl {
 
 		private lastBlockX: number;//最后一个路障的坐标
 
+		//重置某些保存的参数
+		private ResetSavedConfig(): void {
+			this.character.saveWalkDistance = 0;
+		}
+		//重置参数
 		private ResetConfig(): void {
 			this.roadDistance = 0;
 			this.roadMetre = 0;
@@ -184,8 +189,8 @@ module GameControl {
 		private MouseUpEvent(e: Event): void {
 			Laya.timer.clear(this, this.LogMouseDownTime);
 			var pre = this.pressTime < this.pressMaxTime ? this.pressTime / this.pressMaxTime : 1;
-			if (!this.characterControl.Wlak(pre)){
-				
+			if (!this.characterControl.Wlak(pre)) {
+
 				console.log('game over');
 				this.bg.dlgOver.popup();
 			}
@@ -218,6 +223,11 @@ module GameControl {
 			}, [], false);
 
 			this.bg.btnRePlay.clickHandler = Handler.create(this, function () {
+				this.GameReset();
+			}, [], false);
+
+			this.bg.btnGoOn.clickHandler = Handler.create(this, function () {
+				this.bg.dlgOver.close();
 				this.GameReset();
 			}, [], false);
 		}

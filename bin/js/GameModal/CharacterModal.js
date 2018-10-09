@@ -20,11 +20,12 @@ var CharacterModal;
     var Point = Laya.Point;
     var Character = /** @class */ (function (_super) {
         __extends(Character, _super);
-        function Character(charName, width, height) {
+        function Character(charName, width, height, distance) {
             var _this = _super.call(this) || this;
             _this.upLegRotationOffset = -6; //大腿的角度偏移，不会变
             _this.downLegRotationOffset = 6; //小腿的角度偏移，不会变
             _this.InitCharacter(charName, width, height);
+            _this.saveWalkDistance = distance == undefined ? 0 : distance;
             return _this;
         }
         Character.prototype.ResetConfig = function () {

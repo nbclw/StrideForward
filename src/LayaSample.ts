@@ -59,7 +59,7 @@ Laya.MiniAdpter.init();
 //程序入口
 Laya.init(gloablWidth, gloablHeight, WebGL);
 //开启统计信息
-Laya.Stat.show(gloablWidth - 120, gloablHeight - 80);
+Laya.Stat.show(gloablWidth, gloablHeight);
 
 new GameMain();
 //'portrait'

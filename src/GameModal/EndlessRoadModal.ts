@@ -8,6 +8,7 @@ module EndlessRoadModal {
 			super();
 			this.width = width * 3 / 2;
 			this.height = height;
+
 			this.ResetConfig();
 		}
 

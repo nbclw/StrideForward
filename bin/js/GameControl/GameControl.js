@@ -5,11 +5,16 @@ var GameControl;
 (function (GameControl) {
     var Control = /** @class */ (function () {
         function Control() {
-            this.linesMetre = 2; //距离标志线之间间隔几米
+            this.linesMetre = 20; //距离标志线之间间隔几米
             this.pressUnitTime = 50; //按下的单位时间，毫秒为单位
             this.pressMaxTime = 1000; //按下的最大时间，毫秒为单位
             this.CreateAction();
         }
+        //重置某些保存的参数
+        Control.prototype.ResetSavedConfig = function () {
+            this.character.saveWalkDistance = 0;
+        };
+        //重置参数
         Control.prototype.ResetConfig = function () {
             this.roadDistance = 0;
             this.roadMetre = 0;
@@ -184,6 +189,10 @@ var GameControl;
                 this.bg.dlgPause.close();
             }, [], false);
             this.bg.btnRePlay.clickHandler = Handler.create(this, function () {
+                this.GameReset();
+            }, [], false);
+            this.bg.btnGoOn.clickHandler = Handler.create(this, function () {
+                this.bg.dlgOver.close();
                 this.GameReset();
             }, [], false);
         };

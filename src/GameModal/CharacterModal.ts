@@ -5,10 +5,14 @@ module CharacterModal {
 	import Sprite = Laya.Sprite;
 	import Point = Laya.Point;
 	export class Character extends Sprite {
-		constructor(charName: string, width: number, height: number) {
+		constructor(charName: string, width: number, height: number, distance?: number) {
 			super();
 			this.InitCharacter(charName, width, height);
+			this.saveWalkDistance = distance == undefined ? 0 : distance;
 		}
+
+		public saveWalkDistance: number;//保存走过的总长度，px
+
 		public charName: string;
 		public centerPoint: Point;//角色中心点，会变
 		public boneLength: number;//骨骼标准长度，不会变
